@@ -163,7 +163,7 @@
     <vers.mockito>1.9.5</vers.mockito>
     <vers.mojo-executor>1.5</vers.mojo-executor>
     <vers.oozie>${cdh.oozie.version}</vers.oozie> <!-- OOZIE-1790 -->
-    <vers.parquet>${cdh.parquet.version}</vers.parquet>
+    <vers.parquet>${cdh.apache-parquet.version}</vers.parquet>
     <vers.plexus-utils>3.0</vers.plexus-utils>
     <vers.rat>0.9</vers.rat>
     <vers.slf4j>${cdh.slf4j.version}</vers.slf4j>
@@ -883,7 +883,7 @@
         <version>${vers.avro}</version>
       </dependency>
       <dependency>
-        <groupId>com.twitter</groupId>
+        <groupId>org.apache.parquet</groupId>
         <artifactId>parquet-hive-bundle</artifactId>
         <version>${vers.parquet}</version>
         <exclusions>
@@ -894,7 +894,7 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>com.twitter</groupId>
+        <groupId>org.apache.parquet</groupId>
         <artifactId>parquet-avro</artifactId>
         <version>${vers.parquet}</version>
         <exclusions>
