@@ -20,8 +20,9 @@ import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HTablePool;
+//import org.apache.hadoop.hbase.client.HTablePool;
 
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.hbase.avro.SpecificAvroDao;
@@ -70,7 +71,8 @@ public class UserProfileExample {
    */
   public UserProfileExample() throws InterruptedException {
     Configuration conf = HBaseConfiguration.create();
-    HTablePool pool = new HTablePool(conf, 10);
+    //    HTablePool pool = new HTablePool(conf, 10);
+    Object pool = new Object();
     SchemaManager schemaManager = new DefaultSchemaManager(pool);
 
     registerSchemas(conf, schemaManager);
@@ -278,10 +280,11 @@ public class UserProfileExample {
     try {
       // Construct an HBaseAdmin object (required by schema tool), and delete it
       // if it exists so we start fresh.
-      admin = new HBaseAdmin(conf);
-      if (admin.tableExists("kite_example_user_profiles")) {
-        admin.disableTable("kite_example_user_profiles");
-        admin.deleteTable("kite_example_user_profiles");
+	// admin = new HBaseAdmin(conf);
+	admin = null;
+	if (admin.tableExists(TableName.valueOf("kite_example_user_profiles"))) {
+	    admin.disableTable(TableName.valueOf("kite_example_user_profiles"));
+	    admin.deleteTable(TableName.valueOf("kite_example_user_profiles"));
       }
     } catch (IOException e) {
       throw new RuntimeException(e);

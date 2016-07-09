@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Put;
@@ -71,8 +72,8 @@ public class HBaseUtils {
       for (List<KeyValue> keyValueList : familyMap.values()) {
         for (KeyValue keyValue : keyValueList) {
           // don't use put.add(KeyValue) since it doesn't work with HBase 0.96 onwards
-          put.add(keyValue.getFamily(), keyValue.getQualifier(),
-              keyValue.getTimestamp(), keyValue.getValue());
+	    put.addColumn(CellUtil.cloneFamily(keyValue), CellUtil.cloneQualifier(keyValue),
+			  keyValue.getTimestamp(), CellUtil.cloneValue(keyValue));
         }
       }
     }

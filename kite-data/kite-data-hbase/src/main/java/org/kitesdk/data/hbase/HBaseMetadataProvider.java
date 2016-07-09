@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.avro.Schema;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetIOException;
@@ -74,7 +75,7 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
 
     try {
       String managedSchemaName = "managed_schemas"; // TODO: allow table to be specified
-      if (!hbaseAdmin.tableExists(managedSchemaName)) {
+      if (!hbaseAdmin.tableExists(TableName.valueOf(managedSchemaName))) {
         HTableDescriptor table = new HTableDescriptor(managedSchemaName);
         table.addFamily(new HColumnDescriptor("meta"));
         table.addFamily(new HColumnDescriptor("schema"));
@@ -100,7 +101,7 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
         "org.kitesdk.data.hbase.avro.AvroEntitySerDe");
 
     try {
-      if (!hbaseAdmin.tableExists(tableName)) {
+	if (!hbaseAdmin.tableExists(TableName.valueOf(tableName))) {
         HTableDescriptor desc = new HTableDescriptor(tableName);
         Set<String> familiesToAdd = entitySchema.getColumnMappingDescriptor()
             .getRequiredColumnFamilies();
@@ -115,8 +116,8 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
             .getRequiredColumnFamilies();
         familiesToAdd.add(new String(Constants.SYS_COL_FAMILY));
         familiesToAdd.add(new String(Constants.OBSERVABLE_COL_FAMILY));
-        HTableDescriptor desc = hbaseAdmin.getTableDescriptor(tableName
-            .getBytes());
+        HTableDescriptor desc = hbaseAdmin.getTableDescriptor(TableName.valueOf(tableName
+										.getBytes()));
         for (HColumnDescriptor columnDesc : desc.getColumnFamilies()) {
           String familyName = columnDesc.getNameAsString();
           if (familiesToAdd.contains(familyName)) {
@@ -124,13 +125,13 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
           }
         }
         if (familiesToAdd.size() > 0) {
-          hbaseAdmin.disableTable(tableName);
+	    hbaseAdmin.disableTable(TableName.valueOf(tableName));
           try {
             for (String family : familiesToAdd) {
-              hbaseAdmin.addColumn(tableName, columnFamily(family, descriptor));
+		//              hbaseAdmin.addColumn(tableName, columnFamily(family, descriptor));
             }
           } finally {
-            hbaseAdmin.enableTable(tableName);
+	      hbaseAdmin.enableTable(TableName.valueOf(tableName));
           }
         }
       }
@@ -212,11 +213,11 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
     // TODO: https://issues.cloudera.org/browse/CDK-145, https://issues.cloudera.org/browse/CDK-146
     for (String columnFamily : descriptor.getColumnMapping().getRequiredColumnFamilies()) {
       try {
-        hbaseAdmin.disableTable(tableName);
+	  hbaseAdmin.disableTable(TableName.valueOf(tableName));
         try {
-          hbaseAdmin.deleteColumn(tableName, columnFamily);
+	    //hbaseAdmin.deleteColumn(TableName.valueOf(tableName), columnFamily);
         } finally {
-          hbaseAdmin.enableTable(tableName);
+	    hbaseAdmin.enableTable(TableName.valueOf(tableName));
         }
       } catch (IOException e) {
         throw new DatasetIOException("Cannot delete " + name, e);

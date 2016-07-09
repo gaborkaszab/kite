@@ -18,7 +18,7 @@ package org.kitesdk.data.hbase.impl;
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.PartitionStrategy;
 
-import org.apache.hadoop.hbase.client.HTablePool;
+// import org.apache.hadoop.hbase.client.HTablePool;
 
 /**
  * A DAO implementation that uses a constructor provided EntityMapper to do
@@ -46,7 +46,7 @@ public class BaseDao<E> implements Dao<E> {
    * @param entityMapper
    *          Maps between entities and the HBase operations.
    */
-  public BaseDao(HTablePool tablePool, String tableName,
+  public BaseDao(Object tablePool, String tableName,
       EntityMapper<E> entityMapper) {
     this.tableName = tableName;
     this.entityMapper = entityMapper;

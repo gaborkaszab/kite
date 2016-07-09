@@ -28,7 +28,7 @@ import java.util.Set;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTableInterface;
-import org.apache.hadoop.hbase.client.HTablePool;
+//import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
@@ -44,7 +44,7 @@ import org.apache.hadoop.hbase.util.Bytes;
  */
 public class HBaseClientTemplate {
 
-  private final HTablePool pool;
+  private final Object pool;
   private final String tableName;
 
   private final List<GetModifier> getModifiers = new ArrayList<GetModifier>();
@@ -61,7 +61,7 @@ public class HBaseClientTemplate {
    * @param tableName
    *          The name of the table to interact with.
    */
-  public HBaseClientTemplate(HTablePool pool, String tableName) {
+  public HBaseClientTemplate(Object pool, String tableName) {
     this.pool = pool;
     this.tableName = tableName;
   }
@@ -261,7 +261,7 @@ public class HBaseClientTemplate {
    * @return Result returned from the Get.
    */
   public Result get(Get get) {
-    HTableInterface table = pool.getTable(tableName);
+      HTableInterface table = null; //pool.getTable(tableName);
     try {
       for (GetModifier getModifier : getModifiers) {
         get = getModifier.modifyGet(get);
@@ -368,7 +368,7 @@ public class HBaseClientTemplate {
    *         conflict
    */
   public boolean put(PutAction putAction) {
-    HTableInterface table = pool.getTable(tableName);
+      HTableInterface table = null; //pool.getTable(tableName);
     try {
       return put(putAction, table);
     } finally {
@@ -507,7 +507,7 @@ public class HBaseClientTemplate {
   public <E> long increment(PartitionKey key, String fieldName, long amount,
       EntityMapper<E> entityMapper) {
     Increment increment = entityMapper.mapToIncrement(key, fieldName, amount);
-    HTableInterface table = pool.getTable(tableName);
+    HTableInterface table = null; // pool..getTable(tableName);
     Result result;
     try {
       result = table.increment(increment);
@@ -530,7 +530,7 @@ public class HBaseClientTemplate {
    *         conflict
    */
   public boolean delete(DeleteAction deleteAction) {
-    HTableInterface table = pool.getTable(tableName);
+    HTableInterface table = null; // pool..getTable(tableName);
     try {
       for (DeleteActionModifier deleteActionModifier : deleteActionModifiers) {
         deleteAction = deleteActionModifier.modifyDeleteAction(deleteAction);
@@ -643,9 +643,9 @@ public class HBaseClientTemplate {
     for (String requiredColumn : columns) {
       String[] familyAndColumn = requiredColumn.split(":");
       if (familyAndColumn.length == 1) {
-        delete.deleteFamily(Bytes.toBytes(familyAndColumn[0]));
+        delete.addFamily(Bytes.toBytes(familyAndColumn[0]));
       } else {
-        delete.deleteColumns(Bytes.toBytes(familyAndColumn[0]),
+        delete.addColumns(Bytes.toBytes(familyAndColumn[0]),
             Bytes.toBytes(familyAndColumn[1]));
       }
     }

@@ -220,7 +220,7 @@ public abstract class EntitySerDe<E> {
     // column mapping, so simply serialize the value and add the bytes
     // to the put.
     byte[] bytes = serializeColumnValueToBytes(fieldName, fieldValue);
-    put.add(family, qualifier, bytes);
+    put.addColumn(family, qualifier, bytes);
   }
 
   /**
@@ -262,7 +262,7 @@ public abstract class EntitySerDe<E> {
       // serialize the value, and add it to the put.
       byte[] bytes = serializeKeyAsColumnValueToBytes(fieldName, qualifier,
           entry.getValue());
-      put.add(family, qualifierBytes, bytes);
+      put.addColumn(family, qualifierBytes, bytes);
     }
   }
 
@@ -280,7 +280,7 @@ public abstract class EntitySerDe<E> {
     // column qualifier in the system column family.
     Long currVersion = (Long) fieldValue;
     VersionCheckAction versionCheckAction = new VersionCheckAction(currVersion);
-    putAction.getPut().add(Constants.SYS_COL_FAMILY,
+    putAction.getPut().addColumn(Constants.SYS_COL_FAMILY,
         Constants.VERSION_CHECK_COL_QUALIFIER, Bytes.toBytes(currVersion + 1));
     putAction.setVersionCheckAction(versionCheckAction);
   }

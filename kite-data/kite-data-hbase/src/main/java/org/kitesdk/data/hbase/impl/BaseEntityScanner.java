@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.apache.hadoop.hbase.client.HTableInterface;
-import org.apache.hadoop.hbase.client.HTablePool;
+// import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
@@ -42,7 +42,7 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
     implements EntityScanner<E> {
 
   private final EntityMapper<E> entityMapper;
-  private final HTablePool tablePool;
+  private final Object tablePool;
   private final String tableName;
   private Scan scan;
   private ResultScanner resultScanner;
@@ -59,7 +59,7 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
    * @param entityMapper
    *          The EntityMapper to map rows to entities..
    */
-  public BaseEntityScanner(Scan scan, HTablePool tablePool, String tableName,
+  public BaseEntityScanner(Scan scan, Object tablePool, String tableName,
       EntityMapper<E> entityMapper) {
     this.scan = scan;
     this.entityMapper = entityMapper;
@@ -140,7 +140,7 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
 
     HTableInterface table = null;
     try {
-      table = tablePool.getTable(tableName);
+      table = null; // tablePoll.getTable(tableName);
       try {
         resultScanner = table.getScanner(scan);
       } catch (IOException e) {
@@ -221,7 +221,7 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
    */
   public static class Builder<E> extends EntityScannerBuilder<E> {
 
-    public Builder(HTablePool tablePool, String tableName,
+    public Builder(Object tablePool, String tableName,
         EntityMapper<E> entityMapper) {
       super(tablePool, tableName, entityMapper);
     }

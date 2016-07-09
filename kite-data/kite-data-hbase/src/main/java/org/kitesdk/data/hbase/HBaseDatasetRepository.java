@@ -37,21 +37,22 @@ import java.util.List;
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.MasterNotRunningException;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.ZooKeeperConnectionException;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HTablePool;
+//import org.apache.hadoop.hbase.client.HTablePool;
 import org.kitesdk.data.URIBuilder;
 
 public class HBaseDatasetRepository extends AbstractDatasetRepository {
 
   private static final String DEFAULT_NAMESPACE = "default";
 
-  private HTablePool tablePool;
+  private Object tablePool;
   private SchemaManager schemaManager;
   private HBaseMetadataProvider metadataProvider;
   private final URI repositoryUri;
 
-  HBaseDatasetRepository(HBaseAdmin hBaseAdmin, HTablePool tablePool, URI repositoryUri) {
+  HBaseDatasetRepository(HBaseAdmin hBaseAdmin, Object tablePool, URI repositoryUri) {
     this.tablePool = tablePool;
     this.schemaManager = new DefaultSchemaManager(tablePool);
     this.metadataProvider = new HBaseMetadataProvider(hBaseAdmin, schemaManager);
@@ -205,10 +206,12 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository {
     }
 
     public HBaseDatasetRepository build() {
-      HTablePool pool = new HTablePool(configuration, 10);
+	Object pool = new Object();
+	/*
       HBaseAdmin admin;
       try {
-        admin = new HBaseAdmin(configuration);
+	  // admin = new HBaseAdmin(configuration);
+	  admin = null;
       } catch (MasterNotRunningException e) {
         throw new DatasetOperationException(
             "Problem creating HBaseDatasetRepository.", e);
@@ -219,7 +222,8 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository {
         throw new DatasetIOException(
             "Problem creating HBaseDatasetRepository.", e);
       }
-      return new HBaseDatasetRepository(admin, pool, getRepositoryUri(configuration));
+	*/
+      return new HBaseDatasetRepository(null, pool, getRepositoryUri(configuration));
     }
 
     private URI getRepositoryUri(Configuration conf) {

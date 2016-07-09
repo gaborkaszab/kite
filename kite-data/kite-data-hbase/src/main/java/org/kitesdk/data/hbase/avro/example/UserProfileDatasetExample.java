@@ -25,6 +25,7 @@ import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 
 /**
@@ -66,12 +67,12 @@ public class UserProfileDatasetExample {
    */
   public UserProfileDatasetExample() throws Exception {
     Configuration conf = HBaseConfiguration.create();
-    HBaseAdmin admin = new HBaseAdmin(conf);
+    HBaseAdmin admin = null ; //new HBaseAdmin(conf);
 
     // Delete the table if it exists so we start fresh.
-    if (admin.tableExists("kite_example_user_profiles")) {
-      admin.disableTable("kite_example_user_profiles");
-      admin.deleteTable("kite_example_user_profiles");
+    if (admin.tableExists(TableName.valueOf("kite_example_user_profiles"))) {
+	admin.disableTable(TableName.valueOf("kite_example_user_profiles"));
+	admin.deleteTable(TableName.valueOf("kite_example_user_profiles"));
     }
 
     HBaseDatasetRepository repo = new HBaseDatasetRepository.Builder()

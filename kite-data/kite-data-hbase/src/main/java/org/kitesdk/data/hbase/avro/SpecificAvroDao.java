@@ -35,7 +35,7 @@ import java.util.Map;
 
 import org.apache.avro.Schema;
 import org.apache.avro.specific.SpecificRecord;
-import org.apache.hadoop.hbase.client.HTablePool;
+//import org.apache.hadoop.hbase.client.HTablePool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +72,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @param entityClass
    *          The class of the SpecificRecord this DAO will persist and fetch.
    */
-  public SpecificAvroDao(HTablePool tablePool, String tableName,
+  public SpecificAvroDao(Object tablePool, String tableName,
       String entitySchemaString, Class<E> entityClass) {
 
     super(tablePool, tableName, buildEntityMapper(entitySchemaString,
@@ -97,7 +97,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @param entityClass
    *          The class of the SpecificRecord this DAO will persist and fetch.
    */
-  public SpecificAvroDao(HTablePool tablePool, String tableName,
+  public SpecificAvroDao(Object tablePool, String tableName,
       InputStream entitySchemaStream, Class<E> entityClass) {
 
     this(tablePool, tableName, AvroUtils
@@ -119,7 +119,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    *          The SchemaManager which will be used to query schema information
    *          from the meta store.
    */
-  public SpecificAvroDao(HTablePool tablePool, String tableName,
+  public SpecificAvroDao(Object tablePool, String tableName,
       String entityName, SchemaManager schemaManager) {
     super(tablePool, tableName, new VersionedAvroEntityMapper.Builder()
         .setSchemaManager(schemaManager).setTableName(tableName)
@@ -152,7 +152,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    */
   @SuppressWarnings("unchecked")
   public static <E extends SpecificRecord, S extends SpecificRecord> Dao<E> buildCompositeDao(
-      HTablePool tablePool, String tableName,
+      Object tablePool, String tableName,
       List<String> subEntitySchemaStrings, Class<E> entityClass) {
 
     List<EntityMapper<S>> entityMappers = new ArrayList<EntityMapper<S>>();
@@ -197,7 +197,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
   @SuppressWarnings("unchecked")
   public static <K extends SpecificRecord, S extends SpecificRecord> Dao<
       Map<String, S>> buildCompositeDao(
-      HTablePool tablePool, String tableName,
+      Object tablePool, String tableName,
       List<String> subEntitySchemaStrings) {
 
     List<EntityMapper<S>> entityMappers = new ArrayList<EntityMapper<S>>();
@@ -244,7 +244,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @throws ValidationException
    */
   public static <E extends SpecificRecord, S extends SpecificRecord> Dao<E> buildCompositeDaoWithInputStream(
-      HTablePool tablePool, String tableName,
+      Object tablePool, String tableName,
       List<InputStream> subEntitySchemaStreams, Class<E> entityClass) {
 
     List<String> subEntitySchemaStrings = new ArrayList<String>();
@@ -275,7 +275,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @throws SchemaNotFoundException
    */
   public static <K extends SpecificRecord, E extends SpecificRecord, S extends SpecificRecord> Dao<E> buildCompositeDaoWithEntityManager(
-      HTablePool tablePool, String tableName, Class<E> entityClass,
+      Object tablePool, String tableName, Class<E> entityClass,
       SchemaManager schemaManager) {
 
     Schema entitySchema = getSchemaFromEntityClass(entityClass);
@@ -324,7 +324,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @throws SchemaNotFoundException
    */
   public static <K extends SpecificRecord, S extends SpecificRecord> Dao<Map<String, S>> buildCompositeDaoWithEntityManager(
-      HTablePool tablePool, String tableName, List<Class<S>> subEntityClasses,
+      Object tablePool, String tableName, List<Class<S>> subEntityClasses,
       SchemaManager schemaManager) {
 
     List<EntityMapper<S>> entityMappers = new ArrayList<EntityMapper<S>>();
@@ -366,7 +366,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
     private final Constructor<E> entityConstructor;
     private final Schema entitySchema;
 
-    public SpecificCompositeAvroDao(HTablePool tablePool, String tableName,
+    public SpecificCompositeAvroDao(Object tablePool, String tableName,
         List<EntityMapper<S>> entityMappers, Class<E> entityClass) {
 
       super(tablePool, tableName, entityMappers);
@@ -426,7 +426,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
 
     private final List<Schema> subEntitySchemas;
 
-    public SpecificMapCompositeAvroDao(HTablePool tablePool, String tableName,
+    public SpecificMapCompositeAvroDao(Object tablePool, String tableName,
         List<EntityMapper<S>> entityMappers) {
 
       super(tablePool, tableName, entityMappers);

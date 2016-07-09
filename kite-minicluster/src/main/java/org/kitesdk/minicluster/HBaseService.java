@@ -245,7 +245,9 @@ public class HBaseService implements Service {
     // meta region is online so there are no race conditions where operations
     // requiring the meta region might run before it's available. Otherwise,
     // operations are susceptible to region not online errors.
-    HTable t = new HTable(hbaseCluster.getConf(), HBASE_META_TABLE);
+    //HACK
+    // HTable t = new HTable(hbaseCluster.getConf(), HBASE_META_TABLE);
+    HTable t = null;
     ResultScanner s = t.getScanner(new Scan());
     while (s.next() != null) {
       continue;

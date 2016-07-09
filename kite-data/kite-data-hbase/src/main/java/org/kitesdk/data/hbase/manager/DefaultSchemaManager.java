@@ -28,7 +28,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.hadoop.hbase.client.HTablePool;
+//import org.apache.hadoop.hbase.client.HTablePool;
 import org.kitesdk.data.ConcurrentSchemaModificationException;
 import org.kitesdk.data.DatasetException;
 import org.kitesdk.data.FieldMapping;
@@ -75,11 +75,11 @@ public class DefaultSchemaManager implements SchemaManager {
    * @param tablePool
    *          The pool of HBase tables
    */
-  public DefaultSchemaManager(HTablePool tablePool) {
+  public DefaultSchemaManager(Object tablePool) {
     this(new ManagedSchemaHBaseDao(tablePool));
   }
 
-  public DefaultSchemaManager(HTablePool tablePool, String managedSchemaTable) {
+  public DefaultSchemaManager(Object tablePool, String managedSchemaTable) {
     this(new ManagedSchemaHBaseDao(tablePool, managedSchemaTable));
   }
 

@@ -18,7 +18,7 @@ package org.kitesdk.data.hbase.avro;
 import java.io.InputStream;
 
 import org.apache.avro.generic.GenericRecord;
-import org.apache.hadoop.hbase.client.HTablePool;
+//import org.apache.hadoop.hbase.client.HTablePool;
 
 import org.kitesdk.data.hbase.impl.BaseDao;
 import org.kitesdk.data.hbase.impl.BaseEntityMapper;
@@ -49,7 +49,7 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    *          contains metadata in annotations of the Avro record fields. See
    *          {@link AvroEntityMapper} for details.
    */
-  public GenericAvroDao(HTablePool tablePool, String tableName,
+  public GenericAvroDao(Object tablePool, String tableName,
       String entitySchemaString) {
     super(tablePool, tableName, buildEntityMapper(entitySchemaString));
   }
@@ -71,7 +71,7 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    *          of the Avro record fields. See {@link AvroEntityMapper} for
    *          details.
    */
-  public GenericAvroDao(HTablePool tablePool, String tableName,
+  public GenericAvroDao(Object tablePool, String tableName,
       InputStream entitySchemaStream) {
 
     super(tablePool, tableName, buildEntityMapper(AvroUtils
@@ -97,7 +97,7 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    *          The schema as a string representing the schema version that this
    *          DAO should use for writes.
    */
-  public GenericAvroDao(HTablePool tablePool, String tableName,
+  public GenericAvroDao(Object tablePool, String tableName,
       String entityName, SchemaManager schemaManager, String entitySchemaString) {
     super(tablePool, tableName, new VersionedAvroEntityMapper.Builder()
         .setSchemaManager(schemaManager).setTableName(tableName)
@@ -121,7 +121,7 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    *          The SchemaManager which will create the entity mapper that will
    *          power this dao.
    */
-  public GenericAvroDao(HTablePool tablePool, String tableName,
+  public GenericAvroDao(Object tablePool, String tableName,
       String entityName, SchemaManager schemaManager) {
 
     super(tablePool, tableName, new VersionedAvroEntityMapper.Builder()

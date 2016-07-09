@@ -18,7 +18,7 @@ package org.kitesdk.data.hbase.manager;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.hadoop.hbase.client.HTablePool;
+// import org.apache.hadoop.hbase.client.HTablePool;
 
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.hbase.avro.AvroEntitySchema;
@@ -65,11 +65,11 @@ class ManagedSchemaHBaseDao implements ManagedSchemaDao {
    * @param tablePool
    *          The pool of HBase tables
    */
-  public ManagedSchemaHBaseDao(HTablePool tablePool) {
+  public ManagedSchemaHBaseDao(Object tablePool) {
     this(tablePool, DEFAULT_MANAGED_SCHEMA_TABLE);
   }
 
-  public ManagedSchemaHBaseDao(HTablePool tablePool, String managedSchemaTable) {
+  public ManagedSchemaHBaseDao(Object tablePool, String managedSchemaTable) {
     managedSchemaDao = new SpecificAvroDao<ManagedSchema>(tablePool,
         managedSchemaTable, managedSchemaEntity.getRawSchema(),
         ManagedSchema.class);

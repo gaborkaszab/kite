@@ -18,7 +18,7 @@ package org.kitesdk.data.hbase.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.hadoop.hbase.client.HTablePool;
+// import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
@@ -37,7 +37,7 @@ import org.kitesdk.data.hbase.filters.SingleFieldEntityFilter;
  */
 public abstract class EntityScannerBuilder<E> {
 
-  private HTablePool tablePool;
+  private Object tablePool;
   private String tableName;
   private PartitionKey startKey;
   private PartitionKey stopKey;
@@ -57,7 +57,7 @@ public abstract class EntityScannerBuilder<E> {
    * to the scanner, this will be the preferred method for users to create
    * scanners.
    */
-  public EntityScannerBuilder(HTablePool tablePool, String tableName,
+  public EntityScannerBuilder(Object tablePool, String tableName,
       EntityMapper<E> entityMapper) {
     this.tablePool = tablePool;
     this.tableName = tableName;
@@ -69,7 +69,7 @@ public abstract class EntityScannerBuilder<E> {
    * 
    * @return String
    */
-  HTablePool getTablePool() {
+  Object getTablePool() {
     return tablePool;
   }
 

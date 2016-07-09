@@ -58,6 +58,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -238,7 +239,7 @@ public class SchemaTool {
       try {
         HTableDescriptor descriptor = prepareTableDescriptor(tableName,
             entitySchemaString);
-        if (hbaseAdmin.isTableAvailable(tableName)) {
+        if (hbaseAdmin.isTableAvailable(TableName.valueOf(tableName))) {
           modifyTable(tableName, descriptor);
         } else {
           createTable(descriptor);
@@ -339,7 +340,7 @@ public class SchemaTool {
         Iterator<String> iterator = tablesCreated.iterator();
         while (iterator.hasNext()) {
           String table = iterator.next();
-          if (hbaseAdmin.isTableAvailable(table)) {
+          if (hbaseAdmin.isTableAvailable(TableName.valueOf(table))) {
             // Perform any updates scheduled on the table
             if (pendingTableUpdates.containsKey(table)) {
               for (HTableDescriptor tableDescriptor : pendingTableUpdates
@@ -372,7 +373,7 @@ public class SchemaTool {
     try {
       List<HColumnDescriptor> columnsToAdd = Lists.newArrayList();
       HTableDescriptor currentFamilies = hbaseAdmin
-          .getTableDescriptor(Bytes.toBytes(tableName));
+          .getTableDescriptor(TableName.valueOf(tableName));
       for (HColumnDescriptor newFamily : newFamilies) {
         if (!currentFamilies.hasFamily(newFamily.getName())) {
           columnsToAdd.add(new HColumnDescriptor(newFamily.getName()));
@@ -380,13 +381,13 @@ public class SchemaTool {
       }
       // Add all the necessary column families
       if (!columnsToAdd.isEmpty()) {
-        hbaseAdmin.disableTable(tableName);
+	  hbaseAdmin.disableTable(TableName.valueOf(tableName));
         try {
           for (HColumnDescriptor columnToAdd : columnsToAdd) {
-            hbaseAdmin.addColumn(tableName, columnToAdd);
+	      hbaseAdmin.addColumn(TableName.valueOf(tableName), columnToAdd);
           }
         } finally {
-          hbaseAdmin.enableTable(tableName);
+	    hbaseAdmin.enableTable(TableName.valueOf(tableName));
         }
       }
     } catch (IOException e) {

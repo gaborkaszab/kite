@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.hadoop.hbase.client.HTablePool;
+//import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Result;
 import org.kitesdk.data.ColumnMapping;
@@ -173,7 +173,7 @@ public abstract class CompositeBaseDao<E, S> implements CompositeDao<E, S> {
    *          Maps between entities and the HBase operations for their
    *          respective sub entities.
    */
-  public CompositeBaseDao(HTablePool tablePool, String tableName,
+  public CompositeBaseDao(Object tablePool, String tableName,
       List<EntityMapper<S>> entityMappers) {
     baseDao = new BaseDao<E>(tablePool, tableName, new CompositeEntityMapper(
         entityMappers));

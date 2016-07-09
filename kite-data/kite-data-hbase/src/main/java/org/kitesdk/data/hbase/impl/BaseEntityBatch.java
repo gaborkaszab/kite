@@ -24,7 +24,7 @@ import com.google.common.base.Preconditions;
 import java.io.IOException;
 
 import org.apache.hadoop.hbase.client.HTableInterface;
-import org.apache.hadoop.hbase.client.HTablePool;
+// import org.apache.hadoop.hbase.client.HTablePool;
 
 public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
     implements EntityBatch<E>, Flushable {
@@ -49,10 +49,10 @@ public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
    *          The batch buffer size in bytes.
    */
   public BaseEntityBatch(HBaseClientTemplate clientTemplate,
-      EntityMapper<E> entityMapper, HTablePool pool, String tableName,
+      EntityMapper<E> entityMapper, Object pool, String tableName,
       long writeBufferSize) {
-    this.table = pool.getTable(tableName);
-    this.table.setAutoFlush(false);
+      this.table = null; // pool.getTable(tableName);
+      //    this.table.setAutoFlush(false);
     this.clientTemplate = clientTemplate;
     this.entityMapper = entityMapper;
     this.state = ReaderWriterState.NEW;
@@ -86,9 +86,9 @@ public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
    *          The name of the HBase table
    */
   public BaseEntityBatch(HBaseClientTemplate clientTemplate,
-      EntityMapper<E> entityMapper, HTablePool pool, String tableName) {
-    this.table = pool.getTable(tableName);
-    this.table.setAutoFlush(false);
+      EntityMapper<E> entityMapper, Object pool, String tableName) {
+      this.table = null; //pool.getTable(tableName);
+      //    this.table.setAutoFlush(false);
     this.clientTemplate = clientTemplate;
     this.entityMapper = entityMapper;
     this.state = ReaderWriterState.NEW;
@@ -133,7 +133,7 @@ public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
     if (state.equals(ReaderWriterState.OPEN)) {
       try {
         table.flushCommits();
-        table.setAutoFlush(true);
+	//        table.setAutoFlush(true);
         table.close();
       } catch (IOException e) {
         throw new DatasetIOException("Error closing table [" + table + "]", e);
