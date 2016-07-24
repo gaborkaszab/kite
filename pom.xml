@@ -118,7 +118,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- Java versions -->
-    <javaVersion>1.7</javaVersion>
+    <javaVersion>1.8</javaVersion>
     <targetJavaVersion>1.7</targetJavaVersion>
     <Xdoclint /> <!-- set by the java8 profile to turn off doclint -->
 
