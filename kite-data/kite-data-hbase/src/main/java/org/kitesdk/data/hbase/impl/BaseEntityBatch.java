@@ -15,26 +15,30 @@
  */
 package org.kitesdk.data.hbase.impl;
 
+import java.io.IOException;
+
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.BufferedMutator;
+import org.apache.hadoop.hbase.client.BufferedMutatorParams;
+import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.Table;
 import org.kitesdk.data.DatasetIOException;
 import org.kitesdk.data.Flushable;
 import org.kitesdk.data.spi.AbstractDatasetWriter;
 import org.kitesdk.data.spi.ReaderWriterState;
+
 import com.google.common.base.Preconditions;
 
-import java.io.IOException;
-
-import org.apache.hadoop.hbase.client.HTableInterface;
-// import org.apache.hadoop.hbase.client.HTablePool;
-
-public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
-    implements EntityBatch<E>, Flushable {
-  private final HTableInterface table;
+public class BaseEntityBatch<E> extends AbstractDatasetWriter<E> implements
+    EntityBatch<E>, Flushable {
+  private final Table table;
   private final EntityMapper<E> entityMapper;
   private final HBaseClientTemplate clientTemplate;
+  private final BufferedMutator mutator;
   private ReaderWriterState state;
 
   /**
-   * Checks an HTable out of the HTablePool and modifies it to take advantage of
+   * Checks an Table out of the Connection and modifies it to take advantage of
    * batch puts. This is very useful when performing many consecutive puts.
    *
    * @param clientTemplate
@@ -46,33 +50,26 @@ public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
    * @param tableName
    *          The name of the HBase table
    * @param writeBufferSize
-   *          The batch buffer size in bytes.
+   *          Buffer size before flushing writes, in bytes.
    */
   public BaseEntityBatch(HBaseClientTemplate clientTemplate,
-      EntityMapper<E> entityMapper, Object pool, String tableName,
+      EntityMapper<E> entityMapper, Connection pool, TableName tableName,
       long writeBufferSize) {
-      this.table = null; // pool.getTable(tableName);
-      //    this.table.setAutoFlush(false);
+    try {
+      this.table = pool.getTable(tableName);
+      BufferedMutatorParams params = new BufferedMutatorParams(tableName);
+      params.writeBufferSize(writeBufferSize);
+      this.mutator = pool.getBufferedMutator(params);
+    } catch (IOException e) {
+      throw new DatasetIOException("Error getting table from connection", e);
+    }
     this.clientTemplate = clientTemplate;
     this.entityMapper = entityMapper;
     this.state = ReaderWriterState.NEW;
-
-    /**
-     * If the writeBufferSize is less than the currentBufferSize, then the
-     * buffer will get flushed automatically by HBase. This should never happen,
-     * since we're getting a fresh table out of the pool, and the writeBuffer
-     * should be empty.
-     */
-    try {
-      table.setWriteBufferSize(writeBufferSize);
-    } catch (IOException e) {
-      throw new DatasetIOException("Error flushing commits for table ["
-          + table + "]", e);
-    }
   }
 
   /**
-   * Checks an HTable out of the HTablePool and modifies it to take advantage of
+   * Checks an Table out of the Connection and modifies it to take advantage of
    * batch puts using the default writeBufferSize (2MB). This is very useful
    * when performing many consecutive puts.
    *
@@ -86,9 +83,14 @@ public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
    *          The name of the HBase table
    */
   public BaseEntityBatch(HBaseClientTemplate clientTemplate,
-      EntityMapper<E> entityMapper, Object pool, String tableName) {
-      this.table = null; //pool.getTable(tableName);
-      //    this.table.setAutoFlush(false);
+      EntityMapper<E> entityMapper, Connection pool, TableName tableName) {
+    try {
+      this.table = pool.getTable(tableName);
+      this.mutator = pool.getBufferedMutator(tableName);
+    } catch (IOException e) {
+      throw new DatasetIOException("Error getting table "
+          + tableName.getNameAsString() + " from connection", e);
+    }
     this.clientTemplate = clientTemplate;
     this.entityMapper = entityMapper;
     this.state = ReaderWriterState.NEW;
@@ -121,10 +123,10 @@ public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
         "Attempt to flush a writer in state:%s", state);
 
     try {
-      table.flushCommits();
+      mutator.flush();
     } catch (IOException e) {
-      throw new DatasetIOException("Error flushing commits for table ["
-          + table + "]", e);
+      throw new DatasetIOException("Error flushing commits for table [" + table
+          + "]", e);
     }
   }
 
@@ -132,8 +134,8 @@ public class BaseEntityBatch<E> extends AbstractDatasetWriter<E>
   public void close() {
     if (state.equals(ReaderWriterState.OPEN)) {
       try {
-        table.flushCommits();
-	//        table.setAutoFlush(true);
+        mutator.flush();
+        mutator.close();
         table.close();
       } catch (IOException e) {
         throw new DatasetIOException("Error closing table [" + table + "]", e);

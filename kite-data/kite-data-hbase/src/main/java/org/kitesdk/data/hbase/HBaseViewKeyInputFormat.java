@@ -15,9 +15,13 @@
  */
 package org.kitesdk.data.hbase;
 
+import static org.apache.hadoop.hbase.mapreduce.TableInputFormat.SCAN;
+
 import java.io.IOException;
 import java.util.List;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
@@ -37,8 +41,6 @@ import org.kitesdk.data.hbase.impl.Dao;
 import org.kitesdk.data.hbase.impl.EntityMapper;
 import org.kitesdk.data.spi.AbstractKeyRecordReaderWrapper;
 import org.kitesdk.data.spi.FilteredRecordReader;
-
-import static org.apache.hadoop.hbase.mapreduce.TableInputFormat.SCAN;
 
 class HBaseViewKeyInputFormat<E> extends InputFormat<E, Void> {
 
@@ -84,8 +86,8 @@ class HBaseViewKeyInputFormat<E> extends InputFormat<E, Void> {
 
   private TableInputFormat getDelegate(Configuration conf) throws IOException {
     TableInputFormat delegate = new TableInputFormat();
-    String tableName = HBaseMetadataProvider.getTableName(dataset.getName());
-    conf.set(TableInputFormat.INPUT_TABLE, tableName);
+    TableName tableName = HBaseMetadataProvider.getTableName(dataset.getName());
+    conf.set(TableInputFormat.INPUT_TABLE, tableName.getNameAsString());
     if (view != null) {
       Job tempJob = new Job();
       Scan scan = ((BaseEntityScanner) view.newEntityScanner()).getScan();

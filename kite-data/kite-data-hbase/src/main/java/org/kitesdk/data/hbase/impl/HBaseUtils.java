@@ -19,16 +19,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
 
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.kitesdk.compat.DynMethods;
 
 /**
  * Static utility functions for working with the HBase API.
@@ -48,16 +47,12 @@ public class HBaseUtils {
 
   }
   
-  // CDK-506 Add compat for hbase-0.98
-  private static final DynMethods.UnboundMethod GET_FAMILY_MAP_METHOD = 
-      new DynMethods.Builder("getFamilyMap").impl(Put.class).build(); 
-  
   /**
    * Given a list of puts, create a new put with the values in each put merged
    * together. It is expected that no puts have a value for the same fully
    * qualified column. Return the new put.
-   * 
-   * @param key
+   *
+   * @param keyBytes
    *          The key of the new put.
    * @param putList
    *          The list of puts to merge
@@ -66,14 +61,13 @@ public class HBaseUtils {
   public static Put mergePuts(byte[] keyBytes, List<Put> putList) {
     Put put = new Put(keyBytes);
     for (Put putToMerge : putList) {
-      Map<byte[], List<KeyValue>> familyMap = 
-          (Map<byte[], List<KeyValue>>) GET_FAMILY_MAP_METHOD.invoke(putToMerge);
-      
-      for (List<KeyValue> keyValueList : familyMap.values()) {
-        for (KeyValue keyValue : keyValueList) {
+      NavigableMap<byte[], List<Cell>> familyCellMap = putToMerge.getFamilyCellMap();
+
+      for (List<Cell> cellList : familyCellMap.values()) {
+        for (Cell cell : cellList) {
           // don't use put.add(KeyValue) since it doesn't work with HBase 0.96 onwards
-	    put.addColumn(CellUtil.cloneFamily(keyValue), CellUtil.cloneQualifier(keyValue),
-			  keyValue.getTimestamp(), CellUtil.cloneValue(keyValue));
+	        put.addColumn(CellUtil.cloneFamily(cell), CellUtil.cloneQualifier(cell),
+                        cell.getTimestamp(), CellUtil.cloneValue(cell));
         }
       }
     }

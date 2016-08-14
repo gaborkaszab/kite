@@ -15,24 +15,25 @@
  */
 package org.kitesdk.data.hbase.impl;
 
-import com.google.common.collect.ImmutableList;
-import org.kitesdk.data.DatasetIOException;
-import org.kitesdk.data.spi.PartitionKey;
-import com.google.common.annotations.VisibleForTesting;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
-import org.apache.hadoop.hbase.client.HTableInterface;
-//import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.kitesdk.data.DatasetIOException;
+import org.kitesdk.data.spi.PartitionKey;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class simplifies the use of HBase client, and helps to avoid common
@@ -44,8 +45,8 @@ import org.apache.hadoop.hbase.util.Bytes;
  */
 public class HBaseClientTemplate {
 
-  private final Object pool;
-  private final String tableName;
+  private final Connection connection;
+  private final TableName tableName;
 
   private final List<GetModifier> getModifiers = new ArrayList<GetModifier>();
   private final List<PutActionModifier> putActionModifiers = new ArrayList<PutActionModifier>();
@@ -53,17 +54,17 @@ public class HBaseClientTemplate {
   private final List<ScanModifier> scanModifiers = new ArrayList<ScanModifier>();
 
   /**
-   * Construct an HBaseClientTemplate. Requires an HTablePool to acquire HBase
-   * connections from, and the name of the table to interact with.
+   * Construct an HBaseClientTemplate. Requires a Connection to acquire HBase
+   * tables from, and the name of the table to interact with.
    * 
    * @param pool
-   *          The pool of HBase connections.
+   *          The connection to HBase.
    * @param tableName
    *          The name of the table to interact with.
    */
-  public HBaseClientTemplate(Object pool, String tableName) {
-    this.pool = pool;
-    this.tableName = tableName;
+  public HBaseClientTemplate(Connection pool, String tableName) {
+    this.connection = pool;
+    this.tableName = TableName.valueOf(tableName);
   }
 
   /**
@@ -72,7 +73,7 @@ public class HBaseClientTemplate {
    * @param clientTemplate
    */
   public HBaseClientTemplate(HBaseClientTemplate clientTemplate) {
-    this.pool = clientTemplate.pool;
+    this.connection = clientTemplate.connection;
     this.tableName = clientTemplate.tableName;
 
     this.getModifiers.addAll(clientTemplate.getModifiers);
@@ -85,16 +86,17 @@ public class HBaseClientTemplate {
    * Register a GetModifier to be called before every Get is executed on HBase.
    * This GetModifier will be replaced if already registered and added if not.
    * Equality is checked by calling the equals() on the getModifier passed.
-   * GetModifiers will be called in the order they are added to the
-   * template, so if any modifier is destructive, it must be added in the right
-   * order.
+   * GetModifiers will be called in the order they are added to the template, so
+   * if any modifier is destructive, it must be added in the right order.
    *
    * Not Thread Safe
-   * @param getModifier The GetModifier to register.
+   * 
+   * @param getModifier
+   *          The GetModifier to register.
    */
   public void registerGetModifier(GetModifier getModifier) {
     int currentIndex = getModifiers.indexOf(getModifier);
-    if(currentIndex == -1) {
+    if (currentIndex == -1) {
       getModifiers.add(getModifier);
     } else {
       getModifiers.set(currentIndex, getModifier);
@@ -115,15 +117,17 @@ public class HBaseClientTemplate {
    * HBase. This PutActionModifier will be replaced if already registered and
    * added if not. Equality is checked by calling the equals() on the
    * putActionModifier passed. PutActionModifiers will be called in the order
-   * they are added, so if any modifier is destructive,
-   * it must be added in the right order.
+   * they are added, so if any modifier is destructive, it must be added in the
+   * right order.
    *
    * Not Thread Safe
-   * @param putActionModifier The PutActionModifier to register.
+   * 
+   * @param putActionModifier
+   *          The PutActionModifier to register.
    */
   public void registerPutActionModifier(PutActionModifier putActionModifier) {
     int currentIndex = putActionModifiers.indexOf(putActionModifier);
-    if(currentIndex == -1) {
+    if (currentIndex == -1) {
       putActionModifiers.add(putActionModifier);
     } else {
       putActionModifiers.set(currentIndex, putActionModifier);
@@ -147,17 +151,19 @@ public class HBaseClientTemplate {
   /**
    * Register a DeleteActionModifier to be called before every Delete is
    * executed on HBase. This DeleteActionModifier will be replaced if already
-   * registered and added if its not. Equality is checked by calling the equals()
-   * on the deleteActionModifier passed. DeleteActionModifiers will be called
-   * in the order they are added, so if any modifier is destructive,
-   * it must be added in the right order.
+   * registered and added if its not. Equality is checked by calling the
+   * equals() on the deleteActionModifier passed. DeleteActionModifiers will be
+   * called in the order they are added, so if any modifier is destructive, it
+   * must be added in the right order.
    *
    * Not Thread Safe
-   * @param deleteActionModifier The DeleteActionModifier to register.
+   * 
+   * @param deleteActionModifier
+   *          The DeleteActionModifier to register.
    */
   public void registerDeleteModifier(DeleteActionModifier deleteActionModifier) {
     int currentIndex = deleteActionModifiers.indexOf(deleteActionModifier);
-    if(currentIndex == -1) {
+    if (currentIndex == -1) {
       deleteActionModifiers.add(deleteActionModifier);
     } else {
       deleteActionModifiers.set(currentIndex, deleteActionModifier);
@@ -176,17 +182,18 @@ public class HBaseClientTemplate {
   /**
    * Register a ScanModifier to be called before every Scan is executed on
    * HBase. This ScanModifier will be replaced if already registered and added
-   * if not. Equality is checked by calling the equals() on the scanModifier passed.
-   * ScanModifiers will be called in the order they are added,
-   * so if any modifier is destructive, it must be added in the
-   * right order.
+   * if not. Equality is checked by calling the equals() on the scanModifier
+   * passed. ScanModifiers will be called in the order they are added, so if any
+   * modifier is destructive, it must be added in the right order.
    *
    * Not Thread Safe
-   * @param scanModifier The ScanModifier to register.
+   * 
+   * @param scanModifier
+   *          The ScanModifier to register.
    */
   public void registerScanModifier(ScanModifier scanModifier) {
     int currentIndex = scanModifiers.indexOf(scanModifier);
-    if(currentIndex == -1) {
+    if (currentIndex == -1) {
       scanModifiers.add(scanModifier);
     } else {
       scanModifiers.set(currentIndex, scanModifier);
@@ -247,7 +254,7 @@ public class HBaseClientTemplate {
    * @return The table name
    */
   public String getTableName() {
-    return tableName;
+    return tableName.getNameAsString();
   }
 
   /**
@@ -261,24 +268,13 @@ public class HBaseClientTemplate {
    * @return Result returned from the Get.
    */
   public Result get(Get get) {
-      HTableInterface table = null; //pool.getTable(tableName);
-    try {
-      for (GetModifier getModifier : getModifiers) {
-        get = getModifier.modifyGet(get);
-      }
-      try {
-        return table.get(get);
-      } catch (IOException e) {
-        throw new DatasetIOException("Error performing get", e);
-      }
-    } finally {
-      if (table != null) {
-        try {
-          table.close();
-        } catch (IOException e) {
-          throw new DatasetIOException("Error putting table back into pool", e);
-        }
-      }
+    for (GetModifier getModifier : getGetModifiers()) {
+      get = getModifier.modifyGet(get);
+    }
+    try (Table table = connection.getTable(tableName)) {
+      return table.get(get);
+    } catch (IOException e) {
+      throw new DatasetIOException("Error performing get", e);
     }
   }
 
@@ -368,22 +364,15 @@ public class HBaseClientTemplate {
    *         conflict
    */
   public boolean put(PutAction putAction) {
-      HTableInterface table = null; //pool.getTable(tableName);
-    try {
+    try (Table table = connection.getTable(tableName)) {
       return put(putAction, table);
-    } finally {
-      if (table != null) {
-        try {
-          table.close();
-        } catch (IOException e) {
-          throw new DatasetIOException("Error putting table back into pool", e);
-        }
-      }
+    } catch (IOException e) {
+      throw new DatasetIOException("Error putting table back into pool", e);
     }
   }
 
   /**
-   * Execute a Put on HBase using a pre-define HTableInterface
+   * Execute a Put on HBase using a pre-defined Table
    * 
    * Any PutModifers registered with registerPutModifier will be invoked before
    * the Put is executed.
@@ -391,12 +380,12 @@ public class HBaseClientTemplate {
    * @param putAction
    *          The put to execute on HBase.
    * @param table
-   *          The HTableInterface object to interface with
+   *          The Table object to interface with
    * @return True if the put succeeded, False if the put failed due to update
    *         conflict
    */
-  public boolean put(PutAction putAction, HTableInterface table) {
-    for (PutActionModifier putActionModifier : putActionModifiers) {
+  public boolean put(PutAction putAction, Table table) {
+    for (PutActionModifier putActionModifier : getPutActionModifiers()) {
       putAction = putActionModifier.modifyPutAction(putAction);
     }
     Put put = putAction.getPut();
@@ -507,9 +496,8 @@ public class HBaseClientTemplate {
   public <E> long increment(PartitionKey key, String fieldName, long amount,
       EntityMapper<E> entityMapper) {
     Increment increment = entityMapper.mapToIncrement(key, fieldName, amount);
-    HTableInterface table = null; // pool..getTable(tableName);
     Result result;
-    try {
+    try (Table table = connection.getTable(tableName)) {
       result = table.increment(increment);
     } catch (IOException e) {
       throw new DatasetIOException("Error incrementing field.", e);
@@ -530,9 +518,8 @@ public class HBaseClientTemplate {
    *         conflict
    */
   public boolean delete(DeleteAction deleteAction) {
-    HTableInterface table = null; // pool..getTable(tableName);
-    try {
-      for (DeleteActionModifier deleteActionModifier : deleteActionModifiers) {
+    try (Table table = connection.getTable(tableName)) {
+      for (DeleteActionModifier deleteActionModifier : getDeleteActionModifiers()) {
         deleteAction = deleteActionModifier.modifyDeleteAction(deleteAction);
       }
       Delete delete = deleteAction.getDelete();
@@ -555,14 +542,8 @@ public class HBaseClientTemplate {
           throw new DatasetIOException("Error deleteing row from table", e);
         }
       }
-    } finally {
-      if (table != null) {
-        try {
-          table.close();
-        } catch (IOException e) {
-          throw new DatasetIOException("Error putting table back into pool", e);
-        }
-      }
+    } catch (IOException e) {
+      throw new DatasetIOException("Error putting table back into pool", e);
     }
   }
 
@@ -662,9 +643,9 @@ public class HBaseClientTemplate {
    */
   public <E> EntityScannerBuilder<E> getScannerBuilder(
       EntityMapper<E> entityMapper) {
-    EntityScannerBuilder<E> builder = new BaseEntityScanner.Builder<E>(pool,
-        tableName, entityMapper);
-    for (ScanModifier scanModifier : scanModifiers) {
+    EntityScannerBuilder<E> builder = new BaseEntityScanner.Builder<E>(
+        connection, tableName, entityMapper);
+    for (ScanModifier scanModifier : getScanModifiers()) {
       builder.addScanModifier(scanModifier);
     }
     return builder;
@@ -681,7 +662,7 @@ public class HBaseClientTemplate {
    */
   public <E> EntityBatch<E> createBatch(EntityMapper<E> entityMapper,
       long writeBufferSize) {
-    return new BaseEntityBatch<E>(this, entityMapper, pool, tableName,
+    return new BaseEntityBatch<E>(this, entityMapper, connection, tableName,
         writeBufferSize);
   }
 
@@ -693,6 +674,6 @@ public class HBaseClientTemplate {
    * @return EntityBatch
    */
   public <E> EntityBatch<E> createBatch(EntityMapper<E> entityMapper) {
-    return new BaseEntityBatch<E>(this, entityMapper, pool, tableName);
+    return new BaseEntityBatch<E>(this, entityMapper, connection, tableName);
   }
 }

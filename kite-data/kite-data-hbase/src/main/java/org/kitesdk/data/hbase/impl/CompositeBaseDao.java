@@ -21,14 +21,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//import org.apache.hadoop.hbase.client.HTablePool;
+import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Result;
 import org.kitesdk.data.ColumnMapping;
 import org.kitesdk.data.DatasetException;
 import org.kitesdk.data.FieldMapping;
-import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.PartitionStrategy;
+import org.kitesdk.data.spi.PartitionKey;
 
 /**
  * Base implementation of the CompositeDao interface. Internally managed
@@ -163,9 +163,9 @@ public abstract class CompositeBaseDao<E, S> implements CompositeDao<E, S> {
 
   /**
    * Constructor that will internally create an HBaseClientTemplate from the
-   * tablePool and the tableName.
+   * connection and the tableName.
    * 
-   * @param tablePool
+   * @param connection
    *          A pool of HBase Tables.
    * @param tableName
    *          The name of the table this dao persists to and fetches from.
@@ -173,9 +173,9 @@ public abstract class CompositeBaseDao<E, S> implements CompositeDao<E, S> {
    *          Maps between entities and the HBase operations for their
    *          respective sub entities.
    */
-  public CompositeBaseDao(Object tablePool, String tableName,
+  public CompositeBaseDao(Connection connection, String tableName,
       List<EntityMapper<S>> entityMappers) {
-    baseDao = new BaseDao<E>(tablePool, tableName, new CompositeEntityMapper(
+    baseDao = new BaseDao<E>(connection, tableName, new CompositeEntityMapper(
         entityMappers));
   }
 

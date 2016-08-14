@@ -15,10 +15,9 @@
  */
 package org.kitesdk.data.hbase.impl;
 
-import org.kitesdk.data.spi.PartitionKey;
+import org.apache.hadoop.hbase.client.Connection;
 import org.kitesdk.data.PartitionStrategy;
-
-// import org.apache.hadoop.hbase.client.HTablePool;
+import org.kitesdk.data.spi.PartitionKey;
 
 /**
  * A DAO implementation that uses a constructor provided EntityMapper to do
@@ -35,22 +34,22 @@ public class BaseDao<E> implements Dao<E> {
 
   /**
    * Constructor that will internally create an HBaseClientTemplate from the
-   * tablePool and the tableName.
+   * connection and the tableName.
    * 
    * @param transactionManager
    *          The TransactionManager that will manage transactional entities.
-   * @param tablePool
+   * @param connection
    *          A pool of HBase Tables.
    * @param tableName
    *          The name of the table this dao persists to and fetches from.
    * @param entityMapper
    *          Maps between entities and the HBase operations.
    */
-  public BaseDao(Object tablePool, String tableName,
+  public BaseDao(Connection connection, String tableName,
       EntityMapper<E> entityMapper) {
     this.tableName = tableName;
     this.entityMapper = entityMapper;
-    this.clientTemplate = new HBaseClientTemplate(tablePool, tableName);
+    this.clientTemplate = new HBaseClientTemplate(connection, tableName);
   }
 
   /**

@@ -15,21 +15,22 @@
  */
 package org.kitesdk.data.hbase.impl;
 
-import org.kitesdk.data.DatasetIOException;
-import org.kitesdk.data.spi.AbstractDatasetReader;
-import org.kitesdk.data.spi.ReaderWriterState;
-import com.google.common.base.Preconditions;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.apache.hadoop.hbase.client.HTableInterface;
-// import org.apache.hadoop.hbase.client.HTablePool;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.filter.FilterList;
+import org.kitesdk.data.DatasetIOException;
+import org.kitesdk.data.spi.AbstractDatasetReader;
+import org.kitesdk.data.spi.ReaderWriterState;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Base EntityScanner implementation. This EntityScanner will use an
@@ -42,8 +43,8 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
     implements EntityScanner<E> {
 
   private final EntityMapper<E> entityMapper;
-  private final Object tablePool;
-  private final String tableName;
+  private final Connection connection;
+  private final TableName tableName;
   private Scan scan;
   private ResultScanner resultScanner;
   private Iterator<Result> iterator;
@@ -52,18 +53,18 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
   /**
    * @param scan
    *          The Scan object that will be used
-   * @param tablePool
-   *          The HTablePool instance to get a table to open a scanner on.
+   * @param connection
+   *          The Connection instance to get a table to open a scanner on.
    * @param tableName
    *          The table name to perform the scan on.
    * @param entityMapper
    *          The EntityMapper to map rows to entities..
    */
-  public BaseEntityScanner(Scan scan, Object tablePool, String tableName,
+  public BaseEntityScanner(Scan scan, Connection connection, TableName tableName,
       EntityMapper<E> entityMapper) {
     this.scan = scan;
     this.entityMapper = entityMapper;
-    this.tablePool = tablePool;
+    this.connection = connection;
     this.tableName = tableName;
 
     this.state = ReaderWriterState.NEW;
@@ -77,7 +78,7 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
    */
   private BaseEntityScanner(Builder<E> scanBuilder) {
     this.entityMapper = scanBuilder.getEntityMapper();
-    this.tablePool = scanBuilder.getTablePool();
+    this.connection = scanBuilder.getConnection();
     this.tableName = scanBuilder.getTableName();
     this.scan = new Scan();
 
@@ -138,23 +139,15 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
     Preconditions.checkState(state.equals(ReaderWriterState.NEW),
         "A scanner may not be opened more than once - current state:%s", state);
 
-    HTableInterface table = null;
-    try {
-      table = null; // tablePoll.getTable(tableName);
+    try (Table table = connection.getTable(tableName)) {
       try {
         resultScanner = table.getScanner(scan);
       } catch (IOException e) {
         throw new DatasetIOException("Failed to fetch scanner", e);
       }
-    } finally {
-      if (table != null) {
-        try {
-          table.close();
-        } catch (IOException e) {
-          throw new DatasetIOException("Error putting table back into pool",
-              e);
-        }
-      }
+    } catch (IOException e) {
+      throw new DatasetIOException("Error putting table back into pool",
+          e);
     }
     iterator = resultScanner.iterator();
 
@@ -221,9 +214,9 @@ public class BaseEntityScanner<E> extends AbstractDatasetReader<E>
    */
   public static class Builder<E> extends EntityScannerBuilder<E> {
 
-    public Builder(Object tablePool, String tableName,
+    public Builder(Connection connection, TableName tableName,
         EntityMapper<E> entityMapper) {
-      super(tablePool, tableName, entityMapper);
+      super(connection, tableName, entityMapper);
     }
 
     @Override

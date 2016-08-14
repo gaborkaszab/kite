@@ -18,8 +18,7 @@ package org.kitesdk.data.hbase.avro;
 import java.io.InputStream;
 
 import org.apache.avro.generic.GenericRecord;
-//import org.apache.hadoop.hbase.client.HTablePool;
-
+import org.apache.hadoop.hbase.client.Connection;
 import org.kitesdk.data.hbase.impl.BaseDao;
 import org.kitesdk.data.hbase.impl.BaseEntityMapper;
 import org.kitesdk.data.hbase.impl.SchemaManager;
@@ -36,8 +35,8 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
   /**
    * Construct a GenericAvroDao.
    * 
-   * @param tablePool
-   *          An HTablePool instance to use for connecting to HBase.
+   * @param connection
+   *          A Connection instance to use for connecting to HBase.
    * @param tableName
    *          The name of the table this Dao will read from and write to in
    *          HBase.
@@ -49,16 +48,16 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    *          contains metadata in annotations of the Avro record fields. See
    *          {@link AvroEntityMapper} for details.
    */
-  public GenericAvroDao(Object tablePool, String tableName,
+  public GenericAvroDao(Connection connection, String tableName,
       String entitySchemaString) {
-    super(tablePool, tableName, buildEntityMapper(entitySchemaString));
+    super(connection, tableName, buildEntityMapper(entitySchemaString));
   }
 
   /**
    * Construct a GenericAvroDao.
    * 
-   * @param tablePool
-   *          An HTablePool instance to use for connecting to HBase.
+   * @param connection
+   *          A Connection instance to use for connecting to HBase.
    * @param tableName
    *          The name of the table this Dao will read from and write to in
    *          HBase.
@@ -71,10 +70,10 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    *          of the Avro record fields. See {@link AvroEntityMapper} for
    *          details.
    */
-  public GenericAvroDao(Object tablePool, String tableName,
+  public GenericAvroDao(Connection connection, String tableName,
       InputStream entitySchemaStream) {
 
-    super(tablePool, tableName, buildEntityMapper(AvroUtils
+    super(connection, tableName, buildEntityMapper(AvroUtils
         .inputStreamToString(entitySchemaStream)));
   }
 
@@ -84,8 +83,8 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    * versions defined by the managed schema. The entitySchemaString parameter
    * represents the schema to use for writes.
    * 
-   * @param tablePool
-   *          An HTabePool instance to use for connecting to HBase.
+   * @param connection
+   *          A Connection instance to use for connecting to HBase.
    * @param tableName
    *          The table name of the managed schema.
    * @param entityName
@@ -97,9 +96,9 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    *          The schema as a string representing the schema version that this
    *          DAO should use for writes.
    */
-  public GenericAvroDao(Object tablePool, String tableName,
+  public GenericAvroDao(Connection connection, String tableName,
       String entityName, SchemaManager schemaManager, String entitySchemaString) {
-    super(tablePool, tableName, new VersionedAvroEntityMapper.Builder()
+    super(connection, tableName, new VersionedAvroEntityMapper.Builder()
         .setSchemaManager(schemaManager).setTableName(tableName)
         .setEntityName(entityName).setSpecific(false)
         .setGenericSchemaString(entitySchemaString).<GenericRecord> build());
@@ -111,8 +110,8 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    * versions defined by the managed schema. The newest schema version available
    * at the time of this dao's creation will be used for writes.
    * 
-   * @param tablePool
-   *          An HTabePool instance to use for connecting to HBase.
+   * @param connection
+   *          An Connection instance to use for connecting to HBase.
    * @param tableName
    *          The table name of the managed schema.
    * @param entityName
@@ -121,10 +120,10 @@ public class GenericAvroDao extends BaseDao<GenericRecord> {
    *          The SchemaManager which will create the entity mapper that will
    *          power this dao.
    */
-  public GenericAvroDao(Object tablePool, String tableName,
+  public GenericAvroDao(Connection connection, String tableName,
       String entityName, SchemaManager schemaManager) {
 
-    super(tablePool, tableName, new VersionedAvroEntityMapper.Builder()
+    super(connection, tableName, new VersionedAvroEntityMapper.Builder()
         .setSchemaManager(schemaManager).setTableName(tableName)
         .setEntityName(entityName).setSpecific(false).<GenericRecord> build());
   }

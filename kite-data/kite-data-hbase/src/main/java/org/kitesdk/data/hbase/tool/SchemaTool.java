@@ -15,24 +15,6 @@
  */
 package org.kitesdk.data.hbase.tool;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
-import org.apache.commons.collections.MultiHashMap;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.kitesdk.data.DatasetException;
-import org.kitesdk.data.ValidationException;
-import org.kitesdk.data.hbase.avro.AvroEntitySchema;
-import org.kitesdk.data.hbase.avro.AvroKeyEntitySchemaParser;
-import org.kitesdk.data.hbase.avro.AvroKeySchema;
-import org.kitesdk.data.hbase.avro.AvroUtils;
-import org.kitesdk.data.hbase.impl.Constants;
-import org.kitesdk.data.hbase.impl.KeySchema;
-import org.kitesdk.data.hbase.impl.SchemaManager;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -59,14 +41,30 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
+import org.apache.hadoop.hbase.client.Admin;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.kitesdk.data.DatasetException;
+import org.kitesdk.data.ValidationException;
+import org.kitesdk.data.hbase.avro.AvroEntitySchema;
+import org.kitesdk.data.hbase.avro.AvroKeyEntitySchemaParser;
+import org.kitesdk.data.hbase.avro.AvroKeySchema;
+import org.kitesdk.data.hbase.avro.AvroUtils;
+import org.kitesdk.data.hbase.impl.Constants;
+import org.kitesdk.data.hbase.impl.KeySchema;
+import org.kitesdk.data.hbase.impl.SchemaManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 
 /**
  * Utility class for managing Managed Schemas in HBase Common.
@@ -87,9 +85,9 @@ public class SchemaTool {
 
   private final SchemaManager schemaManager;
 
-  private final HBaseAdmin hbaseAdmin;
+  private final Admin hbaseAdmin;
 
-  public SchemaTool(HBaseAdmin hbaseAdmin, SchemaManager entityManager) {
+  public SchemaTool(Admin hbaseAdmin, SchemaManager entityManager) {
     this.hbaseAdmin = hbaseAdmin;
     this.schemaManager = entityManager;
   }
@@ -297,7 +295,7 @@ public class SchemaTool {
   private HTableDescriptor prepareTableDescriptor(String tableName,
       String entitySchemaString) {
     HTableDescriptor descriptor = new HTableDescriptor(
-        Bytes.toBytes(tableName));
+        TableName.valueOf(tableName));
     AvroEntitySchema entitySchema = parser
         .parseEntitySchema(entitySchemaString);
     Set<String> familiesToAdd = entitySchema.getColumnMappingDescriptor()
@@ -322,7 +320,7 @@ public class SchemaTool {
       Multimap<String, HTableDescriptor> pendingTableUpdates = ArrayListMultimap
           .create();
       for (HTableDescriptor tableDescriptor : tableDescriptors) {
-        String tableName = Bytes.toString(tableDescriptor.getName());
+        String tableName = tableDescriptor.getNameAsString();
         if (tablesCreated.contains(tableName)) {
           // We have to wait for the table async creation to modify
           // Just add the required columns to be added
@@ -369,11 +367,12 @@ public class SchemaTool {
    */
   private void modifyTable(String tableName, HTableDescriptor newDescriptor) {
     LOG.info("Modifying table " + tableName);
+    TableName table = TableName.valueOf(tableName);
     HColumnDescriptor[] newFamilies = newDescriptor.getColumnFamilies();
     try {
       List<HColumnDescriptor> columnsToAdd = Lists.newArrayList();
       HTableDescriptor currentFamilies = hbaseAdmin
-          .getTableDescriptor(TableName.valueOf(tableName));
+          .getTableDescriptor(table);
       for (HColumnDescriptor newFamily : newFamilies) {
         if (!currentFamilies.hasFamily(newFamily.getName())) {
           columnsToAdd.add(new HColumnDescriptor(newFamily.getName()));
@@ -381,13 +380,13 @@ public class SchemaTool {
       }
       // Add all the necessary column families
       if (!columnsToAdd.isEmpty()) {
-	  hbaseAdmin.disableTable(TableName.valueOf(tableName));
+        hbaseAdmin.disableTable(table);
         try {
           for (HColumnDescriptor columnToAdd : columnsToAdd) {
-	      hbaseAdmin.addColumn(TableName.valueOf(tableName), columnToAdd);
+            hbaseAdmin.addColumn(table, columnToAdd);
           }
         } finally {
-	    hbaseAdmin.enableTable(TableName.valueOf(tableName));
+          hbaseAdmin.enableTable(table);
         }
       }
     } catch (IOException e) {

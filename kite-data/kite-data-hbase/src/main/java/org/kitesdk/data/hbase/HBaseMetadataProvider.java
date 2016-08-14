@@ -15,10 +15,6 @@
  */
 package org.kitesdk.data.hbase;
 
-import com.google.common.base.Preconditions;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
@@ -29,20 +25,25 @@ import org.apache.avro.Schema;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
+import org.apache.hadoop.hbase.client.Admin;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetIOException;
 import org.kitesdk.data.DatasetNotFoundException;
-import org.kitesdk.data.spi.ColumnMappingParser;
 import org.kitesdk.data.hbase.avro.AvroEntitySchema;
 import org.kitesdk.data.hbase.impl.Constants;
 import org.kitesdk.data.hbase.impl.EntitySchema;
 import org.kitesdk.data.hbase.impl.SchemaManager;
-import org.kitesdk.data.spi.PartitionStrategyParser;
 import org.kitesdk.data.spi.AbstractMetadataProvider;
+import org.kitesdk.data.spi.ColumnMappingParser;
 import org.kitesdk.data.spi.Compatibility;
+import org.kitesdk.data.spi.PartitionStrategyParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 class HBaseMetadataProvider extends AbstractMetadataProvider {
 
@@ -52,10 +53,10 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
   private static final String DEFAULT_NAMESPACE = "default";
   private static final String REPLICATION_ID_PROP = "hbase.replication.scope";
 
-  private HBaseAdmin hbaseAdmin;
+  private Admin hbaseAdmin;
   private SchemaManager schemaManager;
 
-  public HBaseMetadataProvider(HBaseAdmin hbaseAdmin, SchemaManager schemaManager) {
+  public HBaseMetadataProvider(Admin hbaseAdmin, SchemaManager schemaManager) {
     this.hbaseAdmin = hbaseAdmin;
     this.schemaManager = schemaManager;
   }
@@ -68,14 +69,14 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
     Preconditions.checkNotNull(descriptor, "Descriptor cannot be null");
     Compatibility.checkAndWarn(
         namespace,
-        HBaseMetadataProvider.getTableName(name),
+        HBaseMetadataProvider.getTableName(name).getNameAsString(),
         descriptor.getSchema());
     Preconditions.checkArgument(descriptor.isColumnMapped(),
         "Cannot create dataset %s: missing column mapping", name);
 
     try {
-      String managedSchemaName = "managed_schemas"; // TODO: allow table to be specified
-      if (!hbaseAdmin.tableExists(TableName.valueOf(managedSchemaName))) {
+      TableName managedSchemaName = TableName.valueOf("managed_schemas"); // TODO: allow table to be specified
+      if (!hbaseAdmin.tableExists(managedSchemaName)) {
         HTableDescriptor table = new HTableDescriptor(managedSchemaName);
         table.addFamily(new HColumnDescriptor("meta"));
         table.addFamily(new HColumnDescriptor("schema"));
@@ -91,17 +92,17 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
     AvroEntitySchema entitySchema = new AvroEntitySchema(
         schema, entitySchemaString, descriptor.getColumnMapping());
 
-    String tableName = getTableName(name);
+    TableName tableName = getTableName(name);
     String entityName = getEntityName(name);
 
-    schemaManager.refreshManagedSchemaCache(tableName, entityName);
-    schemaManager.createSchema(tableName, entityName, entitySchemaString,
+    schemaManager.refreshManagedSchemaCache(tableName.getNameAsString(), entityName);
+    schemaManager.createSchema(tableName.getNameAsString(), entityName, entitySchemaString,
         "org.kitesdk.data.hbase.avro.AvroKeyEntitySchemaParser",
         "org.kitesdk.data.hbase.avro.AvroKeySerDe",
         "org.kitesdk.data.hbase.avro.AvroEntitySerDe");
 
     try {
-	if (!hbaseAdmin.tableExists(TableName.valueOf(tableName))) {
+      if (!hbaseAdmin.tableExists(tableName)) {
         HTableDescriptor desc = new HTableDescriptor(tableName);
         Set<String> familiesToAdd = entitySchema.getColumnMappingDescriptor()
             .getRequiredColumnFamilies();
@@ -116,8 +117,7 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
             .getRequiredColumnFamilies();
         familiesToAdd.add(new String(Constants.SYS_COL_FAMILY));
         familiesToAdd.add(new String(Constants.OBSERVABLE_COL_FAMILY));
-        HTableDescriptor desc = hbaseAdmin.getTableDescriptor(TableName.valueOf(tableName
-										.getBytes()));
+        HTableDescriptor desc = hbaseAdmin.getTableDescriptor(tableName);
         for (HColumnDescriptor columnDesc : desc.getColumnFamilies()) {
           String familyName = columnDesc.getNameAsString();
           if (familiesToAdd.contains(familyName)) {
@@ -125,13 +125,13 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
           }
         }
         if (familiesToAdd.size() > 0) {
-	    hbaseAdmin.disableTable(TableName.valueOf(tableName));
+          hbaseAdmin.disableTable(tableName);
           try {
             for (String family : familiesToAdd) {
-		//              hbaseAdmin.addColumn(tableName, columnFamily(family, descriptor));
+              hbaseAdmin.addColumn(tableName, columnFamily(family, descriptor));
             }
           } finally {
-	      hbaseAdmin.enableTable(TableName.valueOf(tableName));
+            hbaseAdmin.enableTable(tableName);
           }
         }
       }
@@ -149,14 +149,14 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
     Preconditions.checkNotNull(descriptor, "Descriptor cannot be null");
     Compatibility.checkAndWarn(
         namespace,
-        HBaseMetadataProvider.getTableName(name),
+        HBaseMetadataProvider.getTableName(name).getNameAsString(),
         descriptor.getSchema());
     Preconditions.checkArgument(descriptor.isColumnMapped(),
         "Cannot update dataset %s: missing column mapping", name);
 
-    String tableName = getTableName(name);
+    TableName tableName = getTableName(name);
     String entityName = getEntityName(name);
-    schemaManager.refreshManagedSchemaCache(tableName, entityName);
+    schemaManager.refreshManagedSchemaCache(tableName.getNameAsString(), entityName);
 
     Schema newSchema = getEmbeddedSchema(descriptor);
 
@@ -164,8 +164,8 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
     EntitySchema entitySchema = new AvroEntitySchema(
         newSchema, schemaString, descriptor.getColumnMapping());
 
-    if (!schemaManager.hasSchemaVersion(tableName, entityName, entitySchema)) {
-      schemaManager.migrateSchema(tableName, entityName, schemaString);
+    if (!schemaManager.hasSchemaVersion(tableName.getNameAsString(), entityName, entitySchema)) {
+      schemaManager.migrateSchema(tableName.getNameAsString(), entityName, schemaString);
     } else {
       LOG.info("Schema hasn't changed, not migrating: (" + name + ")");
     }
@@ -181,10 +181,10 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
     if (!exists(namespace, name)) {
       throw new DatasetNotFoundException("No such dataset: " + name);
     }
-    String tableName = getTableName(name);
+    TableName tableName = getTableName(name);
     String entityName = getEntityName(name);
     return new DatasetDescriptor.Builder()
-        .schemaLiteral(schemaManager.getEntitySchema(tableName, entityName)
+        .schemaLiteral(schemaManager.getEntitySchema(tableName.getNameAsString(), entityName)
             .getRawSchema())
         .build();
   }
@@ -204,20 +204,20 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
     Preconditions.checkState(descriptor.isColumnMapped(),
         "[BUG] Existing descriptor has no column mapping");
 
-    String tableName = getTableName(name);
+    TableName tableName = getTableName(name);
     String entityName = getEntityName(name);
 
-    schemaManager.deleteSchema(tableName, entityName);
+    schemaManager.deleteSchema(tableName.getNameAsString(), entityName);
 
     // TODO: this may delete columns for other entities if they share column families
     // TODO: https://issues.cloudera.org/browse/CDK-145, https://issues.cloudera.org/browse/CDK-146
     for (String columnFamily : descriptor.getColumnMapping().getRequiredColumnFamilies()) {
       try {
-	  hbaseAdmin.disableTable(TableName.valueOf(tableName));
+        hbaseAdmin.disableTable(tableName);
         try {
-	    //hbaseAdmin.deleteColumn(TableName.valueOf(tableName), columnFamily);
+          hbaseAdmin.deleteColumn(tableName, Bytes.toBytes(columnFamily));
         } finally {
-	    hbaseAdmin.enableTable(TableName.valueOf(tableName));
+          hbaseAdmin.enableTable(tableName);
         }
       } catch (IOException e) {
         throw new DatasetIOException("Cannot delete " + name, e);
@@ -232,10 +232,10 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
         "Non-default namespaces are not supported");
     Preconditions.checkNotNull(name, "Dataset name cannot be null");
 
-    String tableName = getTableName(name);
+    TableName tableName = getTableName(name);
     String entityName = getEntityName(name);
-    schemaManager.refreshManagedSchemaCache(tableName, entityName);
-    return schemaManager.hasManagedSchema(tableName, entityName);
+    schemaManager.refreshManagedSchemaCache(tableName.getNameAsString(), entityName);
+    return schemaManager.hasManagedSchema(tableName.getNameAsString(), entityName);
   }
 
   @Override
@@ -254,12 +254,12 @@ class HBaseMetadataProvider extends AbstractMetadataProvider {
     return datasets;
   }
 
-  static String getTableName(String name) {
+  static TableName getTableName(String name) {
     // TODO: change to use namespace (CDK-140)
     if (name.contains(".")) {
-      return name.substring(0, name.indexOf('.'));
+      return TableName.valueOf(name.substring(0, name.indexOf('.')));
     }
-    return name;
+    return TableName.valueOf(name);
   }
 
   static String getEntityName(String name) {

@@ -20,17 +20,17 @@ import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
-//import org.apache.hadoop.hbase.client.HTablePool;
-
-import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.hbase.avro.SpecificAvroDao;
 import org.kitesdk.data.hbase.impl.Dao;
 import org.kitesdk.data.hbase.impl.EntityScanner;
 import org.kitesdk.data.hbase.impl.SchemaManager;
 import org.kitesdk.data.hbase.manager.DefaultSchemaManager;
 import org.kitesdk.data.hbase.tool.SchemaTool;
+import org.kitesdk.data.spi.PartitionKey;
 
 /**
  * This is an example that demonstrates basic Kite HBase functionality. It uses a
@@ -68,21 +68,21 @@ public class UserProfileExample {
   /**
    * The constructor will start by registering the schemas with the meta store
    * table in HBase, and create the required tables to run.
+   * @throws IOException 
    */
-  public UserProfileExample() throws InterruptedException {
+  public UserProfileExample() throws InterruptedException, IOException {
     Configuration conf = HBaseConfiguration.create();
-    //    HTablePool pool = new HTablePool(conf, 10);
-    Object pool = new Object();
-    SchemaManager schemaManager = new DefaultSchemaManager(pool);
+    Connection connection = ConnectionFactory.createConnection(conf);
+    SchemaManager schemaManager = new DefaultSchemaManager(connection);
 
     registerSchemas(conf, schemaManager);
 
-    userProfileDao = new SpecificAvroDao<UserProfileModel>(pool,
+    userProfileDao = new SpecificAvroDao<UserProfileModel>(connection,
         "kite_example_user_profiles", "UserProfileModel", schemaManager);
-    userActionsDao = new SpecificAvroDao<UserActionsModel>(pool,
+    userActionsDao = new SpecificAvroDao<UserActionsModel>(connection,
         "kite_example_user_profiles", "UserActionsModel", schemaManager);
     userProfileActionsDao = SpecificAvroDao.buildCompositeDaoWithEntityManager(
-        pool, "kite_example_user_profiles", UserProfileActionsModel.class,
+        connection, "kite_example_user_profiles", UserProfileActionsModel.class,
         schemaManager);
   }
 
@@ -300,8 +300,9 @@ public class UserProfileExample {
    * The main driver method. Doesn't require any arguments.
    * 
    * @param args
+   * @throws IOException 
    */
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) throws InterruptedException, IOException {
     UserProfileExample example = new UserProfileExample();
 
     // Let's create some user profiles

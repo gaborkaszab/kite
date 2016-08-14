@@ -15,14 +15,25 @@
  */
 package org.kitesdk.data.hbase;
 
-import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.avro.specific.SpecificRecord;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HConstants;
+import org.apache.hadoop.hbase.MasterNotRunningException;
+import org.apache.hadoop.hbase.ZooKeeperConnectionException;
+import org.apache.hadoop.hbase.client.Admin;
+import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetIOException;
 import org.kitesdk.data.DatasetOperationException;
 import org.kitesdk.data.RandomAccessDataset;
+import org.kitesdk.data.URIBuilder;
 import org.kitesdk.data.hbase.avro.GenericAvroDao;
 import org.kitesdk.data.hbase.avro.SpecificAvroDao;
 import org.kitesdk.data.hbase.impl.Dao;
@@ -30,31 +41,20 @@ import org.kitesdk.data.hbase.impl.SchemaManager;
 import org.kitesdk.data.hbase.manager.DefaultSchemaManager;
 import org.kitesdk.data.spi.AbstractDatasetRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.avro.specific.SpecificRecord;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.MasterNotRunningException;
-import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.ZooKeeperConnectionException;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
-//import org.apache.hadoop.hbase.client.HTablePool;
-import org.kitesdk.data.URIBuilder;
+import com.google.common.base.Preconditions;
 
 public class HBaseDatasetRepository extends AbstractDatasetRepository {
 
   private static final String DEFAULT_NAMESPACE = "default";
 
-  private Object tablePool;
+  private Connection connection;
   private SchemaManager schemaManager;
   private HBaseMetadataProvider metadataProvider;
   private final URI repositoryUri;
 
-  HBaseDatasetRepository(HBaseAdmin hBaseAdmin, Object tablePool, URI repositoryUri) {
-    this.tablePool = tablePool;
-    this.schemaManager = new DefaultSchemaManager(tablePool);
+  HBaseDatasetRepository(Admin hBaseAdmin, Connection connection, URI repositoryUri) {
+    this.connection = connection;
+    this.schemaManager = new DefaultSchemaManager(connection);
     this.metadataProvider = new HBaseMetadataProvider(hBaseAdmin, schemaManager);
     this.repositoryUri = repositoryUri;
   }
@@ -99,7 +99,7 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository {
         "Non-default namespaces are not supported");
     Preconditions.checkNotNull(name, "Dataset name cannot be null");
 
-    String tableName = HBaseMetadataProvider.getTableName(name);
+    String tableName = HBaseMetadataProvider.getTableName(name).getNameAsString();
     String entityName = HBaseMetadataProvider.getEntityName(name);
     if (entityName.contains(".")) {
       List<DatasetDescriptor> descriptors = new ArrayList<DatasetDescriptor>();
@@ -138,7 +138,7 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository {
         throw new DatasetOperationException("Failed to resolve sub-type", e);
       }
     }
-    Dao dao = SpecificAvroDao.buildCompositeDaoWithEntityManager(tablePool,
+    Dao dao = SpecificAvroDao.buildCompositeDaoWithEntityManager(connection,
         tableName, subEntityClasses, schemaManager);
     return new DaoDataset<E>(namespace, name, dao, descriptors.get(0),
         new URIBuilder(repositoryUri, namespace, name).build(), type);
@@ -147,13 +147,13 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository {
   @SuppressWarnings("unchecked")
   private <E> RandomAccessDataset<E> newDataset(String namespace, String name, DatasetDescriptor descriptor, Class<E> type) {
     // TODO: use descriptor.getFormat() to decide type of DAO (Avro vs. other)
-    String tableName = HBaseMetadataProvider.getTableName(name);
+    String tableName = HBaseMetadataProvider.getTableName(name).getNameAsString();
     String entityName = HBaseMetadataProvider.getEntityName(name);
     Dao dao;
     if (isSpecific(descriptor)) {
-      dao = new SpecificAvroDao(tablePool, tableName, entityName, schemaManager);
+      dao = new SpecificAvroDao(connection, tableName, entityName, schemaManager);
     } else {
-      dao = new GenericAvroDao(tablePool, tableName, entityName, schemaManager);
+      dao = new GenericAvroDao(connection, tableName, entityName, schemaManager);
     }
     return new DaoDataset(namespace, name, dao, descriptor,
         new URIBuilder(repositoryUri, namespace, name).build(), type);
@@ -206,12 +206,11 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository {
     }
 
     public HBaseDatasetRepository build() {
-	Object pool = new Object();
-	/*
-      HBaseAdmin admin;
+      Connection connection;
+      Admin admin;
       try {
-	  // admin = new HBaseAdmin(configuration);
-	  admin = null;
+        connection = ConnectionFactory.createConnection(configuration);
+        admin = connection.getAdmin();
       } catch (MasterNotRunningException e) {
         throw new DatasetOperationException(
             "Problem creating HBaseDatasetRepository.", e);
@@ -222,8 +221,7 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository {
         throw new DatasetIOException(
             "Problem creating HBaseDatasetRepository.", e);
       }
-	*/
-      return new HBaseDatasetRepository(null, pool, getRepositoryUri(configuration));
+      return new HBaseDatasetRepository(admin, connection, getRepositoryUri(configuration));
     }
 
     private URI getRepositoryUri(Configuration conf) {

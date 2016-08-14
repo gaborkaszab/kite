@@ -15,9 +15,6 @@
  */
 package org.kitesdk.data.hbase.manager;
 
-import com.google.common.collect.Lists;
-
-import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +25,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-//import org.apache.hadoop.hbase.client.HTablePool;
+import org.apache.hadoop.hbase.client.Connection;
 import org.kitesdk.data.ConcurrentSchemaModificationException;
 import org.kitesdk.data.DatasetException;
 import org.kitesdk.data.FieldMapping;
@@ -42,6 +39,9 @@ import org.kitesdk.data.hbase.impl.SchemaManager;
 import org.kitesdk.data.hbase.manager.generated.ManagedSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * The Default SchemaManager implementation. It uses a ManagedSchemaDao
@@ -72,15 +72,15 @@ public class DefaultSchemaManager implements SchemaManager {
    * Constructor which uses the default managed schema table name, which is
    * managed_schemas.
    * 
-   * @param tablePool
-   *          The pool of HBase tables
+   * @param connection
+   *          The Connection to HBase
    */
-  public DefaultSchemaManager(Object tablePool) {
-    this(new ManagedSchemaHBaseDao(tablePool));
+  public DefaultSchemaManager(Connection connection) {
+    this(new ManagedSchemaHBaseDao(connection));
   }
 
-  public DefaultSchemaManager(Object tablePool, String managedSchemaTable) {
-    this(new ManagedSchemaHBaseDao(tablePool, managedSchemaTable));
+  public DefaultSchemaManager(Connection connection, String managedSchemaTable) {
+    this(new ManagedSchemaHBaseDao(connection, managedSchemaTable));
   }
 
   public DefaultSchemaManager(ManagedSchemaDao managedSchemaDao) {

@@ -15,17 +15,6 @@
  */
 package org.kitesdk.data.hbase.avro;
 
-import org.kitesdk.data.DatasetException;
-import org.kitesdk.data.SchemaNotFoundException;
-import org.kitesdk.data.ValidationException;
-import org.kitesdk.data.hbase.impl.BaseDao;
-import org.kitesdk.data.hbase.impl.BaseEntityMapper;
-import org.kitesdk.data.hbase.impl.CompositeBaseDao;
-import org.kitesdk.data.hbase.impl.Dao;
-import org.kitesdk.data.hbase.impl.EntityMapper;
-import org.kitesdk.data.hbase.impl.SchemaManager;
-import com.google.common.collect.Lists;
-
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -35,9 +24,20 @@ import java.util.Map;
 
 import org.apache.avro.Schema;
 import org.apache.avro.specific.SpecificRecord;
-//import org.apache.hadoop.hbase.client.HTablePool;
+import org.apache.hadoop.hbase.client.Connection;
+import org.kitesdk.data.DatasetException;
+import org.kitesdk.data.SchemaNotFoundException;
+import org.kitesdk.data.ValidationException;
+import org.kitesdk.data.hbase.impl.BaseDao;
+import org.kitesdk.data.hbase.impl.BaseEntityMapper;
+import org.kitesdk.data.hbase.impl.CompositeBaseDao;
+import org.kitesdk.data.hbase.impl.Dao;
+import org.kitesdk.data.hbase.impl.EntityMapper;
+import org.kitesdk.data.hbase.impl.SchemaManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
 
 /**
  * A Dao for Avro's SpecificRecords. In this Dao implementation, both the
@@ -56,8 +56,8 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
   /**
    * Construct the SpecificAvroDao.
    * 
-   * @param tablePool
-   *          An HTablePool instance to use for connecting to HBase.
+   * @param connection
+   *          A Connection instance to use for connecting to HBase.
    * @param tableName
    *          The name of the table this Dao will read from and write to.
    * @param keySchemaString
@@ -72,18 +72,18 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @param entityClass
    *          The class of the SpecificRecord this DAO will persist and fetch.
    */
-  public SpecificAvroDao(Object tablePool, String tableName,
+  public SpecificAvroDao(Connection connection, String tableName,
       String entitySchemaString, Class<E> entityClass) {
 
-    super(tablePool, tableName, buildEntityMapper(entitySchemaString,
+    super(connection, tableName, buildEntityMapper(entitySchemaString,
         entitySchemaString, entityClass));
   }
 
   /**
    * Construct the SpecificAvroDao.
    * 
-   * @param tablePool
-   *          An HTablePool instance to use for connecting to HBase.
+   * @param connection
+   *          A Connection instance to use for connecting to HBase.
    * @param tableName
    *          The name of the table this Dao will read from and write to.
    * @param keySchemaStream
@@ -97,10 +97,10 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @param entityClass
    *          The class of the SpecificRecord this DAO will persist and fetch.
    */
-  public SpecificAvroDao(Object tablePool, String tableName,
+  public SpecificAvroDao(Connection connection, String tableName,
       InputStream entitySchemaStream, Class<E> entityClass) {
 
-    this(tablePool, tableName, AvroUtils
+    this(connection, tableName, AvroUtils
         .inputStreamToString(entitySchemaStream), entityClass);
   }
 
@@ -109,8 +109,8 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * entity mapper to this Dao that knows how to map the different entity schema
    * versions defined by the managed schema.
    * 
-   * @param tablePool
-   *          An HTabePool instance to use for connecting to HBase.
+   * @param connection
+   *          A Connection instance to use for connecting to HBase.
    * @param tableName
    *          The table name of the managed schema.
    * @param entityName
@@ -119,9 +119,9 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    *          The SchemaManager which will be used to query schema information
    *          from the meta store.
    */
-  public SpecificAvroDao(Object tablePool, String tableName,
+  public SpecificAvroDao(Connection connection, String tableName,
       String entityName, SchemaManager schemaManager) {
-    super(tablePool, tableName, new VersionedAvroEntityMapper.Builder()
+    super(connection, tableName, new VersionedAvroEntityMapper.Builder()
         .setSchemaManager(schemaManager).setTableName(tableName)
         .setEntityName(entityName).setSpecific(true).<E> build());
   }
@@ -131,8 +131,8 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * represented by the entitySchemaString avro schema. This avro schema must be
    * a composition of the schemas in the subEntitySchemaStrings list.
    * 
-   * @param tablePool
-   *          An HTablePool instance to use for connecting to HBase
+   * @param connection
+   *          A Connection instance to use for connecting to HBase
    * @param tableName
    *          The table name this dao will read from and write to
    * @param keySchemaString
@@ -152,7 +152,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    */
   @SuppressWarnings("unchecked")
   public static <E extends SpecificRecord, S extends SpecificRecord> Dao<E> buildCompositeDao(
-      Object tablePool, String tableName,
+      Connection connection, String tableName,
       List<String> subEntitySchemaStrings, Class<E> entityClass) {
 
     List<EntityMapper<S>> entityMappers = new ArrayList<EntityMapper<S>>();
@@ -170,7 +170,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
           subEntitySchemaString, subEntitySchemaString, subEntityClass));
     }
 
-    return new SpecificCompositeAvroDao<E, S>(tablePool, tableName,
+    return new SpecificCompositeAvroDao<E, S>(connection, tableName,
         entityMappers, entityClass);
   }
 
@@ -178,8 +178,8 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * Create a CompositeDao, which will return SpecificRecord instances
    * in a Map container.
    *
-   * @param tablePool
-   *          An HTablePool instance to use for connecting to HBase
+   * @param connection
+   *          A Connection instance to use for connecting to HBase
    * @param tableName
    *          The table name this dao will read from and write to
    * @param keySchemaString
@@ -197,7 +197,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
   @SuppressWarnings("unchecked")
   public static <K extends SpecificRecord, S extends SpecificRecord> Dao<
       Map<String, S>> buildCompositeDao(
-      Object tablePool, String tableName,
+      Connection connection, String tableName,
       List<String> subEntitySchemaStrings) {
 
     List<EntityMapper<S>> entityMappers = new ArrayList<EntityMapper<S>>();
@@ -216,7 +216,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
           subEntityClass));
     }
 
-    return new SpecificMapCompositeAvroDao<S>(tablePool, tableName, entityMappers);
+    return new SpecificMapCompositeAvroDao<S>(connection, tableName, entityMappers);
   }
 
   /**
@@ -224,8 +224,8 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * represented by the entitySchemaString avro schema. This avro schema must be
    * a composition of the schemas in the subEntitySchemaStrings list.
    * 
-   * @param tablePool
-   *          An HTablePool instance to use for connecting to HBase
+   * @param connection
+   *          A Connection instance to use for connecting to HBase
    * @param tableName
    *          The table name this dao will read from and write to
    * @param keySchemaStream
@@ -244,7 +244,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @throws ValidationException
    */
   public static <E extends SpecificRecord, S extends SpecificRecord> Dao<E> buildCompositeDaoWithInputStream(
-      Object tablePool, String tableName,
+      Connection connection, String tableName,
       List<InputStream> subEntitySchemaStreams, Class<E> entityClass) {
 
     List<String> subEntitySchemaStrings = new ArrayList<String>();
@@ -252,7 +252,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
       subEntitySchemaStrings.add(AvroUtils
           .inputStreamToString(subEntitySchemaStream));
     }
-    return buildCompositeDao(tablePool, tableName, subEntitySchemaStrings,
+    return buildCompositeDao(connection, tableName, subEntitySchemaStrings,
         entityClass);
   }
 
@@ -261,8 +261,8 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * represented by the entitySchemaString avro schema. This avro schema must be
    * a composition of the schemas in the subEntitySchemaStrings list.
    * 
-   * @param tablePool
-   *          An HTabePool instance to use for connecting to HBase.
+   * @param connection
+   *          A Connection instance to use for connecting to HBase.
    * @param tableName
    *          The table name of the managed schema.
    * @param entityClass
@@ -275,7 +275,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @throws SchemaNotFoundException
    */
   public static <K extends SpecificRecord, E extends SpecificRecord, S extends SpecificRecord> Dao<E> buildCompositeDaoWithEntityManager(
-      Object tablePool, String tableName, Class<E> entityClass,
+      Connection connection, String tableName, Class<E> entityClass,
       SchemaManager schemaManager) {
 
     Schema entitySchema = getSchemaFromEntityClass(entityClass);
@@ -288,7 +288,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
           .<S> build());
     }
 
-    return new SpecificCompositeAvroDao<E, S>(tablePool, tableName,
+    return new SpecificCompositeAvroDao<E, S>(connection, tableName,
         entityMappers, entityClass);
   }
 
@@ -311,8 +311,8 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * Create a CompositeDao, which will return SpecificRecord instances
    * in a Map container.
    *
-   * @param tablePool
-   *          An HTablePool instance to use for connecting to HBase.
+   * @param connection
+   *          A Connection instance to use for connecting to HBase.
    * @param tableName
    *          The table name of the managed schema.
    * @param subEntityClasses
@@ -324,7 +324,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
    * @throws SchemaNotFoundException
    */
   public static <K extends SpecificRecord, S extends SpecificRecord> Dao<Map<String, S>> buildCompositeDaoWithEntityManager(
-      Object tablePool, String tableName, List<Class<S>> subEntityClasses,
+      Connection connection, String tableName, List<Class<S>> subEntityClasses,
       SchemaManager schemaManager) {
 
     List<EntityMapper<S>> entityMappers = new ArrayList<EntityMapper<S>>();
@@ -336,7 +336,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
           .<S> build());
     }
 
-    return new SpecificMapCompositeAvroDao<S>(tablePool, tableName,
+    return new SpecificMapCompositeAvroDao<S>(connection, tableName,
         entityMappers);
   }
 
@@ -366,10 +366,10 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
     private final Constructor<E> entityConstructor;
     private final Schema entitySchema;
 
-    public SpecificCompositeAvroDao(Object tablePool, String tableName,
+    public SpecificCompositeAvroDao(Connection connection, String tableName,
         List<EntityMapper<S>> entityMappers, Class<E> entityClass) {
 
-      super(tablePool, tableName, entityMappers);
+      super(connection, tableName, entityMappers);
       this.entityClass = entityClass;
       try {
         entityConstructor = entityClass.getConstructor();
@@ -426,10 +426,10 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
 
     private final List<Schema> subEntitySchemas;
 
-    public SpecificMapCompositeAvroDao(Object tablePool, String tableName,
+    public SpecificMapCompositeAvroDao(Connection connection, String tableName,
         List<EntityMapper<S>> entityMappers) {
 
-      super(tablePool, tableName, entityMappers);
+      super(connection, tableName, entityMappers);
       subEntitySchemas = Lists.newArrayList();
       for (EntityMapper<S> entityMapper : entityMappers) {
         subEntitySchemas.add(parser.parseEntitySchema(entityMapper.getEntitySchema().getRawSchema()).getAvroSchema());
