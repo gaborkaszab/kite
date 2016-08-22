@@ -31,6 +31,12 @@
     tasks with Kite.
   </description>
 
+
+  <properties>
+	  <datanucleus-rdbms.version>4.1.7</datanucleus-rdbms.version>
+	  <datanucleus-api-jdo.version>4.2.1</datanucleus-api-jdo.version>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -207,6 +213,18 @@
       <type>pom</type>
       <scope>provided</scope>
       <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-api-jdo</artifactId>
+      <version>${datanucleus-api-jdo.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-rdbms</artifactId>
+      <version>${datanucleus-rdbms.version}</version>
     </dependency>
 
   </dependencies>

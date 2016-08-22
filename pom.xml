@@ -199,6 +199,9 @@
     <vers.maven-exec-plugin>1.2.1</vers.maven-exec-plugin>
     <vers.maven-assembly-plugin>2.4.1</vers.maven-assembly-plugin>
 
+    <datanucleus-rdbms.version>4.1.7</datanucleus-rdbms.version>
+    <datanucleus-api-jdo.version>4.2.1</datanucleus-api-jdo.version>
+
     <url.cloudera>http://www.cloudera.com</url.cloudera>
     <url.project>http://kitesdk.org/</url.project>
     <url.jira>http://issues.cloudera.com/browse/CDK</url.jira>
@@ -1121,6 +1124,20 @@
         <artifactId>mojo-executor</artifactId>
         <version>${vers.mojo-executor}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-api-jdo</artifactId>
+        <version>${datanucleus-api-jdo.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-rdbms</artifactId>
+        <version>${datanucleus-rdbms.version}</version>
+      </dependency>
+
+
     </dependencies>
   </dependencyManagement>
 
