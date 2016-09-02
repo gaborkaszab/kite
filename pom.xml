@@ -122,6 +122,8 @@
     <targetJavaVersion>1.7</targetJavaVersion>
     <Xdoclint /> <!-- set by the java8 profile to turn off doclint -->
 
+    <scala.binary.version>${cdh.scala.binary.version}</scala.binary.version>
+
     <!-- used by jdiff, semver rule -->
     <previous.project.version>0.18.0</previous.project.version>
 
@@ -848,7 +850,7 @@
       <!-- Spark -->
       <dependency>
         <groupId>org.apache.spark</groupId>
-        <artifactId>spark-core_2.10</artifactId>
+        <artifactId>spark-core_${scala.binary.version}</artifactId>
         <version>${vers.spark}</version>
       </dependency>
 
