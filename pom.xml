@@ -152,8 +152,9 @@
     <vers.hbase>${cdh.hbase.version}</vers.hbase>
     <vers.hive>${cdh.hive.version}</vers.hive>
     <vers.jetty>8.1.14.v20131031</vers.jetty>
+    <vers.jetty.morphlines>9.3.8.v20160314</vers.jetty.morphlines>
     <vers.jexl>2.1.1</vers.jexl>
-    <vers.compress>1.4.1</vers.compress>
+    <vers.compress>1.8.1</vers.compress>
     <vers.junit>4.10</vers.junit>
     <vers.log4j>1.2.17</vers.log4j>
     <vers.maven>2.0.6</vers.maven>
