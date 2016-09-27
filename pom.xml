@@ -139,7 +139,7 @@
     <vers.avro-base>1.7.6</vers.avro-base> <!-- The version CDH is based on -->
     <vers.avro>${cdh.avro.version}</vers.avro>
     <vers.commons-codec>1.4</vers.commons-codec>
-    <vers.commons-io>2.4</vers.commons-io>
+    <vers.commons-io>2.5</vers.commons-io>
     <vers.commons-logging>1.1.3</vers.commons-logging>
     <vers.commons-lang>2.6</vers.commons-lang>
     <vers.crunch-base>0.11.0</vers.crunch-base> <!-- The version CDH is based on -->
@@ -154,7 +154,7 @@
     <vers.jetty>8.1.14.v20131031</vers.jetty>
     <vers.jetty.morphlines>9.3.8.v20160314</vers.jetty.morphlines>
     <vers.jexl>2.1.1</vers.jexl>
-    <vers.compress>1.8.1</vers.compress>
+    <vers.compress>1.11</vers.compress>
     <vers.junit>4.10</vers.junit>
     <vers.log4j>1.2.17</vers.log4j>
     <vers.maven>2.0.6</vers.maven>
