@@ -50,7 +50,8 @@
 
   <properties>
     <!-- change s3-related versions for kite-data only -->
-    <vers.apache-httpcomponents>${cdh.httpcomponents.version}</vers.apache-httpcomponents>
+    <vers.apache-httpcomponents-client>${cdh.httpcomponents.version}</vers.apache-httpcomponents-client>
+    <vers.apache-httpcomponents-core>${cdh.httpcomponents.core.version}</vers.apache-httpcomponents-core>
     <vers.jets3t>${cdh.jets3t.version}</vers.jets3t>
   </properties>
 
@@ -91,12 +92,12 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>${vers.apache-httpcomponents}</version>
+        <version>${vers.apache-httpcomponents-client}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpcore</artifactId>
-        <version>${vers.apache-httpcomponents}</version>
+        <version>${vers.apache-httpcomponents-core}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
