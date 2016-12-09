@@ -27,6 +27,7 @@ import org.apache.solr.handler.extraction.SolrContentHandler;
 import org.apache.solr.schema.IndexSchema;
 import org.apache.tika.metadata.Metadata;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.kitesdk.morphline.solr.AbstractSolrMorphlineTest;
 
@@ -129,6 +130,7 @@ public class SolrCellMorphlineTest extends AbstractSolrMorphlineTest {
   }
   
   @Test
+  @Ignore
   public void testSolrCellJPGCompressed() throws Exception {
     morphline = createMorphline("test-morphlines" + File.separator + "solrCellJPGCompressed");    
     String path = RESOURCES_DIR + File.separator + "test-documents" + File.separator;
@@ -152,6 +154,7 @@ public class SolrCellMorphlineTest extends AbstractSolrMorphlineTest {
   }  
 
   @Test
+  @Ignore
   public void testSolrCellDocumentTypes() throws Exception {
     morphline = createMorphline("test-morphlines" + File.separator + "solrCellDocumentTypes");    
     String path = RESOURCES_DIR + File.separator + "test-documents" + File.separator;
@@ -181,6 +184,7 @@ public class SolrCellMorphlineTest extends AbstractSolrMorphlineTest {
   }
   
   @Test
+  @Ignore
   public void testSolrCellDocumentTypes2() throws Exception {
     morphline = createMorphline("test-morphlines" + File.separator + "solrCellDocumentTypes");    
     String path = RESOURCES_DIR + File.separator + "test-documents" + File.separator;
