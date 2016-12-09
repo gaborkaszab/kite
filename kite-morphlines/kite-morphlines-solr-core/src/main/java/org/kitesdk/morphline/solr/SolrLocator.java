@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
+import org.apache.solr.client.solrj.impl.CloudSolrClient.Builder;
 import org.apache.solr.client.solrj.retry.MetricsFacade;
 import org.apache.solr.client.solrj.retry.RetryPolicyFactory;
 import org.apache.solr.client.solrj.retry.RetryingSolrServer;
@@ -98,7 +99,9 @@ public class SolrLocator {
       if (collectionName == null || collectionName.length() == 0) {
         throw new MorphlineCompilationException("Parameter 'zkHost' requires that you also pass parameter 'collection'", config);
       }
-      CloudSolrClient cloudSolrClient = new CloudSolrClient(zkHost);
+      CloudSolrClient cloudSolrClient = new Builder()
+          .withZkHost(zkHost)
+          .build();
       cloudSolrClient.setDefaultCollection(collectionName);
       cloudSolrClient.setZkClientTimeout(zkClientSessionTimeout); 
       cloudSolrClient.setZkConnectTimeout(zkClientConnectTimeout); 

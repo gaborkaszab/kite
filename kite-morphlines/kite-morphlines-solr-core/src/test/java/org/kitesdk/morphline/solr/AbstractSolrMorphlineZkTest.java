@@ -25,7 +25,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ListMultimap;
 import com.typesafe.config.Config;
 import org.apache.lucene.util.Constants;
-import org.apache.solr.SolrTestCaseJ4.SuppressSSL;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.cloud.AbstractDistribZkTestBase;
@@ -42,7 +41,6 @@ import org.kitesdk.morphline.base.FaultTolerance;
 import org.kitesdk.morphline.base.Notifications;
 import org.kitesdk.morphline.stdlib.PipeBuilder;
 
-@SuppressSSL // SSL does not work with this test for currently unknown reasons
 public abstract class AbstractSolrMorphlineZkTest extends SolrCloudTestCase {
 
   protected static final String COLLECTION = "collection1";
@@ -55,12 +53,8 @@ public abstract class AbstractSolrMorphlineZkTest extends SolrCloudTestCase {
         .addConfig("conf", SOLR_CONF_DIR.toPath())
         .configure();
 
-    new CollectionAdminRequest.Create()
-      .setCollectionName(COLLECTION)
-      .setConfigName("conf")
-      .setNumShards(2)
-      .setReplicationFactor(1)
-      .process(cluster.getSolrClient());
+    CollectionAdminRequest.createCollection(COLLECTION, "conf", 2, 1)
+        .processAndWait(cluster.getSolrClient(), TIMEOUT);
     AbstractDistribZkTestBase.waitForRecoveriesToFinish(COLLECTION, cluster.getSolrClient().getZkStateReader(),
         false, true, TIMEOUT);
   }

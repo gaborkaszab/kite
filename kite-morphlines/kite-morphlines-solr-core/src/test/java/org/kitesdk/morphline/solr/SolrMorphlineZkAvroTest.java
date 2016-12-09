@@ -66,9 +66,7 @@ public class SolrMorphlineZkAvroTest extends AbstractSolrMorphlineZkTest {
     assertEquals(1, collector.getNumStartEvents());
     
     Notifications.notifyCommitTransaction(morphline);
-    UpdateRequest req = new UpdateRequest();
-    req.setParam(org.apache.solr.common.params.UpdateParams.COMMIT, "true");
-    req.process(cluster.getSolrClient(), COLLECTION);
+    new UpdateRequest().commit(cluster.getSolrClient(), COLLECTION);
     
     // fetch sorted result set from solr
     QueryResponse rsp = cluster.getSolrClient()

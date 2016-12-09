@@ -41,10 +41,8 @@ public class SolrMorphlineZkAliasTest extends AbstractSolrMorphlineZkTest {
   @Test
   public void test() throws Exception {
 
-    new CollectionAdminRequest.CreateAlias()
-      .setAliasName("aliascollection")
-      .setAliasedCollections("collection1")
-      .process(cluster.getSolrClient());
+    CollectionAdminRequest.createAlias("aliascollection", "collection1")
+        .process(cluster.getSolrClient());
     
     morphline = parse("test-morphlines" + File.separator + "loadSolrBasic", "aliascollection");
     Record record = new Record();
@@ -80,9 +78,7 @@ public class SolrMorphlineZkAliasTest extends AbstractSolrMorphlineZkTest {
     assertFalse(citer.hasNext());
     
     Notifications.notifyCommitTransaction(morphline);
-    UpdateRequest req = new UpdateRequest();
-    req.setParam(org.apache.solr.common.params.UpdateParams.COMMIT, "true");
-    req.process(cluster.getSolrClient(), COLLECTION);
+    new UpdateRequest().commit(cluster.getSolrClient(), COLLECTION);
     
     QueryResponse rsp = cluster.getSolrClient()
         .query(COLLECTION, new SolrQuery("*:*").setRows(100000).addSort(Fields.ID, SolrQuery.ORDER.asc));
@@ -95,10 +91,8 @@ public class SolrMorphlineZkAliasTest extends AbstractSolrMorphlineZkTest {
     Notifications.notifyRollbackTransaction(morphline);
     Notifications.notifyShutdown(morphline);
 
-    new CollectionAdminRequest.CreateAlias()
-      .setAliasName("aliascollection")
-      .setAliasedCollections("collection1,collection2")
-      .process(cluster.getSolrClient());
+    CollectionAdminRequest.createAlias("aliascollection", "collection1,collection2")
+        .processAndWait(cluster.getSolrClient(), TIMEOUT);
 
     try {
       parse("test-morphlines" + File.separator + "loadSolrBasic", "aliascollection");

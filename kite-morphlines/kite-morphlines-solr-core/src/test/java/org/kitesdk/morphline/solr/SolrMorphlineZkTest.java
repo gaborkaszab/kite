@@ -75,9 +75,7 @@ public class SolrMorphlineZkTest extends AbstractSolrMorphlineZkTest {
     expected2.put("user_screen_name", "foo1");
     
     Notifications.notifyCommitTransaction(morphline);
-    UpdateRequest req = new UpdateRequest();
-    req.setParam(org.apache.solr.common.params.UpdateParams.COMMIT, "true");
-    req.process(cluster.getSolrClient(), COLLECTION);
+    new UpdateRequest().commit(cluster.getSolrClient(), COLLECTION);
     
     QueryResponse rsp = cluster.getSolrClient()
         .query(COLLECTION, new SolrQuery("*:*").setRows(100000).addSort(Fields.ID, SolrQuery.ORDER.asc));
