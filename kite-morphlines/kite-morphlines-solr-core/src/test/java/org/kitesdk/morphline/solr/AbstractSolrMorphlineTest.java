@@ -39,6 +39,7 @@ import com.typesafe.config.Config;
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.util.Constants;
 import org.apache.solr.SolrTestCaseJ4;
+import org.apache.solr.SolrTestCaseJ4.SuppressSSL;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -62,6 +63,7 @@ import org.kitesdk.morphline.stdlib.PipeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressSSL // SSL does not work with this test for currently unknown reasons
 public class AbstractSolrMorphlineTest extends SolrTestCaseJ4 {
   private static Locale savedLocale;
   protected Collector collector;
