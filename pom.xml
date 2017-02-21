@@ -118,8 +118,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- Java versions -->
-    <javaVersion>1.8</javaVersion>
+    <sourceJavaVersion>1.7</sourceJavaVersion>
     <targetJavaVersion>1.7</targetJavaVersion>
+    <enforceJdkVersion>1.8</enforceJdkVersion>
     <Xdoclint /> <!-- set by the java8 profile to turn off doclint -->
 
     <scala.binary.version>${cdh.scala.binary.version}</scala.binary.version>
@@ -255,7 +256,7 @@
               <version>[3.0.0,)</version>
             </requireMavenVersion>
             <requireJavaVersion>
-              <version>[${javaVersion}.0,)</version>
+              <version>[${enforceJdkVersion}.0,)</version>
             </requireJavaVersion>
           </rules>
         </configuration>
@@ -421,7 +422,7 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${vers.maven-compiler-plugin}</version>
           <configuration>
-            <source>1.6</source>
+            <source>${sourceJavaVersion}</source>
             <target>${targetJavaVersion}</target>
             <compilerArgs>
               <arg>-Xlint:unchecked</arg>
