@@ -271,6 +271,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/javax.transaction/jta -->
+    <dependency>
+      <groupId>javax.transaction</groupId>
+      <artifactId>jta</artifactId>
+      <version>${vers.jta}</version>
+    </dependency>
 
     <!-- Test dependencies (not bundled) -->
 
