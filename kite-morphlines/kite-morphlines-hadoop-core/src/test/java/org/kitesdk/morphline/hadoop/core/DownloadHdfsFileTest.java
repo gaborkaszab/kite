@@ -32,6 +32,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -49,6 +50,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 @RunWith(Parameterized.class)
+@Ignore
 public class DownloadHdfsFileTest extends MiniDFSTest {
   
   private String fileName;

@@ -36,6 +36,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.kitesdk.compat.DynMethods;
 import org.kitesdk.morphline.api.AbstractMorphlineTest;
@@ -47,6 +48,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 
+@Ignore
 public class ReadRCFileTest extends AbstractMorphlineTest {
   private static MiniDFSCluster cluster = null;
   private static FileSystem dfs = null;
