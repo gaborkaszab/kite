@@ -29,7 +29,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.kitesdk.morphline.api.Collector;
 import org.kitesdk.morphline.api.Command;
@@ -42,7 +41,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
-@Ignore
 public class OpenHdfsFileTest extends MiniDFSTest {
   
   private FileSystem fileSystem;
