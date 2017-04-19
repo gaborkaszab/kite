@@ -171,7 +171,7 @@
     <vers.typesafe.config>1.0.2</vers.typesafe.config>
     <vers.solr>${cdh.solr.version}</vers.solr>
     <solr.expected.version>${cdh.solr.version}</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
-    <vers.tika>${cdh.tika.version}</vers.tika>
+    <vers.tika>1.13</vers.tika>
     <vers.jackson>2.3.1</vers.jackson>
     <vers.opencsv>2.3</vers.opencsv>
     <vers.jodatime>2.3</vers.jodatime>
