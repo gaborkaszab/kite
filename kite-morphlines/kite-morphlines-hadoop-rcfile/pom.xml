@@ -44,10 +44,12 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- for dynamic hadoop methods (hadoop 1 and 2 compatible) -->
+    <!-- for Hadoop MiniDFSCluster tests -->
     <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-hadoop-compatibility</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${vers.jackson-hadoop}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -56,11 +58,27 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- for MiniDFSCluster -->
+    <!-- for Hadoop MiniDFSCluster tests -->
     <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>${artifact.hadoop-test-deps}</artifactId>
-      <type>pom</type>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-minicluster</artifactId>
+      <version>${vers.hadoop}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- for Hadoop MiniDFSCluster tests -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${vers.jackson-hadoop}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- for Hadoop MiniDFSCluster tests -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${vers.mockito}</version>
       <scope>test</scope>
     </dependency>
 
@@ -70,4 +88,28 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${vers.jackson-hadoop}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${vers.jackson-hadoop}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${vers.jackson-hadoop}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
 </project>

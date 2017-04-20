@@ -22,7 +22,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.kitesdk.compat.DynMethods;
 
 /**
  * Provides setup/teardown of a MiniDFSCluster for tests that need one.
@@ -31,11 +30,6 @@ public class MiniDFSTest {
   private static MiniDFSCluster cluster = null;
   private static FileSystem dfs = null;
   private static FileSystem lfs = null;
-
-  private static DynMethods.UnboundMethod getFS = new DynMethods
-      .Builder("getFileSystem")
-      .impl(MiniDFSCluster.class)
-      .build();
 
   protected static FileSystem getDFS() {
     return dfs;
@@ -48,15 +42,15 @@ public class MiniDFSTest {
   @BeforeClass
   public static void setupFS() throws IOException {
     final Configuration conf = new Configuration();
-    cluster = new MiniDFSCluster(new Configuration(), 1, true, null);
+    //cluster = new MiniDFSCluster(new Configuration(), 1, true, null);
     // Builder is not compatible with hadoop1
-    //cluster = new MiniDFSCluster.Builder(conf).build();
-    dfs = getFS.invoke(cluster);
+    cluster = new MiniDFSCluster.Builder(conf).build();
+    dfs = cluster.getFileSystem();
     lfs = FileSystem.getLocal(conf);
   }
 
   @AfterClass
-  public static void teardownFS() throws IOException {
+  public static void teardownFS() {
     dfs = null;
     lfs = null;
     if (cluster != null) {

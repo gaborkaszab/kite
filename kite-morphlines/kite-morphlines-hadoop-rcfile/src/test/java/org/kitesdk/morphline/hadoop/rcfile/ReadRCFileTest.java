@@ -37,7 +37,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kitesdk.compat.DynMethods;
 import org.kitesdk.morphline.api.AbstractMorphlineTest;
 import org.kitesdk.morphline.api.Record;
 import org.kitesdk.morphline.base.Fields;
@@ -54,22 +53,17 @@ public class ReadRCFileTest extends AbstractMorphlineTest {
   private static final int NUM_RECORDS = 5;
   private static final int NUM_COLUMNS = 5;
 
-  private static DynMethods.UnboundMethod getFS = new DynMethods
-      .Builder("getFileSystem")
-      .impl(MiniDFSCluster.class)
-      .build();
-
   @BeforeClass
   public static void setupFS() throws IOException {
     final Configuration conf = new Configuration();
-    cluster = new MiniDFSCluster(new Configuration(), 1, true, null);
+    //cluster = new MiniDFSCluster(new Configuration(), 1, true, null);
     // Builder is not compatible with hadoop1
-    //cluster = new MiniDFSCluster.Builder(conf).build();
-    dfs = getFS.invoke(cluster);
+    cluster = new MiniDFSCluster.Builder(conf).build();
+    dfs = cluster.getFileSystem();
   }
 
   @AfterClass
-  public static void teardownFS() throws IOException {
+  public static void teardownFS() {
     dfs = null;
     if (cluster != null) {
       cluster.shutdown();
