@@ -529,6 +529,8 @@
               <exclude>**/src/test/resources/test-documents/**</exclude> <!-- ASL 2.0 -->
               <exclude>**/src/site/**/*.confluence</exclude>
               <exclude>**/nbactions.xml</exclude> <!-- Netbeans configs, not checked in -->
+              <exclude>PATCH.txt</exclude>
+              <exclude>*settings.xml</exclude>
             </excludes>
           </configuration>
         </plugin>
