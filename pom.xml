@@ -152,8 +152,8 @@
     <vers.hadoop>${cdh.hadoop.version}</vers.hadoop>
     <vers.hbase>${cdh.hbase.version}</vers.hbase>
     <vers.hive>${cdh.hive.version}</vers.hive>
-    <vers.jetty>9.3.8.v20160314</vers.jetty>
-    <vers.jetty.morphlines>9.3.8.v20160314</vers.jetty.morphlines>
+    <vers.jetty>${cdh.jetty9.version}</vers.jetty>
+    <vers.jetty.morphlines>${cdh.jetty9.version}</vers.jetty.morphlines>
     <vers.jta>1.1</vers.jta>
     <vers.jexl>2.1.1</vers.jexl>
     <vers.compress>1.11</vers.compress>
