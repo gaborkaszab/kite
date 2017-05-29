@@ -31,13 +31,23 @@ import org.kitesdk.data.spi.DatasetRepositories;
 import org.kitesdk.data.spi.DatasetRepository;
 import org.kitesdk.data.spi.DefaultConfiguration;
 
+import static org.kitesdk.data.HiveTestUtils.setHiveMetastoreConfParameters;
+
 public class TestHivePartitioning {
 
+  private MetaStoreUtil metastore;
+
   @Before
+  public void cleanHiveAndSetHiveMetastoreConfParameters() {
+    Configuration conf = new Configuration();
+    setHiveMetastoreConfParameters(conf);
+    this.metastore = MetaStoreUtil.get(conf);
+    cleanHive();
+  }
+
   @After
   public void cleanHive() {
     // ensures all tables are removed
-    MetaStoreUtil metastore = MetaStoreUtil.get(new Configuration());
     for (String database : metastore.getAllDatabases()) {
       for (String table : metastore.getAllTables(database)) {
         metastore.dropTable(database, table);

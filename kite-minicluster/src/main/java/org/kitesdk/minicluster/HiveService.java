@@ -169,6 +169,9 @@ public class HiveService implements Service {
   }
 
   private HiveConf configureHive(Configuration conf, String localHiveLocation) throws IOException {
+    // Set Hive Metastore configuration parameters to ensure proper behavior during Hive test executions
+    conf.setBoolean("datanucleus.schema.autoCreateAll", true);
+    conf.setBoolean("hive.metastore.schema.verification", false);
     conf.set("hive.metastore.local", "false");
     conf.set(HiveConf.ConfVars.METASTOREURIS.varname, "thrift://" + bindIP + ":" + metastorePort);
     conf.set(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST.varname, bindIP);

@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.kitesdk.cli.TestUtil;
 import org.kitesdk.data.TestHelpers;
 
+import static org.kitesdk.data.HiveTestUtils.setHiveMetastoreConfParameters;
 import static org.mockito.Mockito.*;
 import org.slf4j.Logger;
 
@@ -47,7 +48,10 @@ public class TestLog4jConfigurationCommand {
     TestUtil.run("-v", "create", FILE_DATASET_URI, "-s", avsc);
 
     TestUtil.run("delete", HIVE_DATASET_NAME);
-    TestUtil.run("-v", "create", HIVE_DATASET_NAME, "-s", avsc);
+
+    Configuration hiveConf = new Configuration();
+    setHiveMetastoreConfParameters(hiveConf);
+    TestUtil.run(hiveConf, "-v", "create", HIVE_DATASET_NAME, "-s", avsc);
   }
 
   @AfterClass

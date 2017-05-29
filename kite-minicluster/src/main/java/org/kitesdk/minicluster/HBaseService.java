@@ -28,9 +28,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.MiniHBaseCluster;
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.client.ResultScanner;
-import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.FSUtils;
 import org.apache.hadoop.net.DNS;
 import org.slf4j.Logger;
@@ -247,12 +246,15 @@ public class HBaseService implements Service {
     // operations are susceptible to region not online errors.
     //HACK
     // HTable t = new HTable(hbaseCluster.getConf(), HBASE_META_TABLE);
-    HTable t = null;
+    Connection connection = ConnectionFactory.createConnection(hbaseCluster.getConf());
+    Table t = connection.getTable(TableName.valueOf(HBASE_META_TABLE));
+
     ResultScanner s = t.getScanner(new Scan());
     while (s.next() != null) {
       continue;
     }
     s.close();
     t.close();
+    connection.close();
   }
 }

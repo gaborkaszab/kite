@@ -172,7 +172,7 @@
     <vers.solr>${cdh.solr.version}</vers.solr>
     <solr.expected.version>${cdh.solr.version}</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
     <vers.tika>1.13</vers.tika>
-    <vers.jackson>2.3.1</vers.jackson>
+    <vers.jackson>2.7.8</vers.jackson>
     <vers.jackson-hadoop>2.7.8</vers.jackson-hadoop>
     <vers.opencsv>2.3</vers.opencsv>
     <vers.jodatime>2.3</vers.jodatime>
@@ -200,9 +200,12 @@
     <vers.maven-jar-plugin>2.4</vers.maven-jar-plugin>
     <vers.maven-exec-plugin>1.2.1</vers.maven-exec-plugin>
     <vers.maven-assembly-plugin>2.4.1</vers.maven-assembly-plugin>
+    <vers.jersey>1.19.4</vers.jersey>
 
     <datanucleus-rdbms.version>4.1.7</datanucleus-rdbms.version>
     <datanucleus-api-jdo.version>4.2.1</datanucleus-api-jdo.version>
+    <datanucleus-core.version>4.1.6</datanucleus-core.version>
+    <datanucleus-jdo.version>3.2.0-m3</datanucleus-jdo.version>
 
     <url.cloudera>http://www.cloudera.com</url.cloudera>
     <url.project>http://kitesdk.org/</url.project>
@@ -484,7 +487,7 @@
             <!-- Downgrading to IPv4 due to these ZK issues-->
             <!-- https://issues.apache.org/jira/browse/ZOOKEEPER-1661-->
             <!-- https://issues.apache.org/jira/browse/ZOOKEEPER-1476-->
-            <argLine>-Xmx512m -XX:MaxPermSize=128m -Djava.net.preferIPv4Stack=true</argLine> <!-- 512MB needed for HBase 2 -->
+            <argLine>-Xmx1G -Djava.net.preferIPv4Stack=true</argLine>
           </configuration>
         </plugin>
         <plugin>
@@ -1102,6 +1105,53 @@
         <version>${datanucleus-rdbms.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-core</artifactId>
+        <version>${datanucleus-core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>javax.jdo</artifactId>
+        <version>${datanucleus-jdo.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-core</artifactId>
+        <version>${vers.jersey}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-server</artifactId>
+        <version>${vers.jersey}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-guice</artifactId>
+        <version>${vers.jersey}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-json</artifactId>
+        <version>${vers.jersey}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-servlet</artifactId>
+        <version>${vers.jersey}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-client</artifactId>
+        <version>${vers.jersey}</version>
+      </dependency>
 
     </dependencies>
   </dependencyManagement>

@@ -36,6 +36,8 @@ import org.kitesdk.data.TestHelpers;
 import org.kitesdk.data.spi.DatasetRepositories;
 import org.kitesdk.data.spi.DatasetRepository;
 
+import static org.kitesdk.data.HiveTestUtils.setHiveMetastoreConfParameters;
+
 public class TestManagedExternalHandling {
   private static final DatasetDescriptor descriptor =
       new DatasetDescriptor.Builder()
@@ -44,9 +46,13 @@ public class TestManagedExternalHandling {
 
   private DatasetRepository managed;
   private DatasetRepository external;
+  private MetaStoreUtil metastore;
 
   @Before
   public void setupRepositories() {
+    Configuration conf = new Configuration();
+    setHiveMetastoreConfParameters(conf);
+    this.metastore = MetaStoreUtil.get(conf);
     // ensure the datasets do not already exist
     Datasets.delete("dataset:hive?dataset=managed");
     Datasets.delete("dataset:hive:target/test-repo/ns/external");
@@ -62,7 +68,6 @@ public class TestManagedExternalHandling {
   @After
   public void cleanHive() {
     // ensures all tables are removed
-    MetaStoreUtil metastore = MetaStoreUtil.get(new Configuration());
     for (String database : metastore.getAllDatabases()) {
       for (String table : metastore.getAllTables(database)) {
         metastore.dropTable(database, table);

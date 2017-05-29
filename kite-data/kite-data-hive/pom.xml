@@ -30,6 +30,13 @@
     The Kite Data Hive module provides integration with Hive for Kite datasets.
   </description>
 
+  <properties>
+    <datanucleus-rdbms.version>4.1.7</datanucleus-rdbms.version>
+    <datanucleus-api-jdo.version>4.2.1</datanucleus-api-jdo.version>
+    <datanucleus-core.version>4.1.6</datanucleus-core.version>
+    <datanucleus-jdo.version>3.2.0-m3</datanucleus-jdo.version>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -125,6 +132,44 @@
       <artifactId>kite-hadoop-compatibility</artifactId>
     </dependency>
 
+    <!-- for Hadoop MiniDFSCluster tests -->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-minicluster</artifactId>
+      <version>${vers.hadoop}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- for Hadoop MiniDFSCluster tests -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${vers.jackson-hadoop}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- for Hadoop MiniDFSCluster tests -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${vers.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- for Hive tests -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>10.10.2.0</version>
+    </dependency>
+
+    <!-- for Hive tests -->
+    <dependency>
+      <groupId>com.jolbox</groupId>
+      <artifactId>bonecp</artifactId>
+      <version>0.8.0.RELEASE</version>
+    </dependency>
+
     <!-- Avro, Parquet, and other formats -->
     <dependency>
       <groupId>org.apache.avro</groupId>
@@ -190,6 +235,51 @@
       <type>pom</type>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-api-jdo</artifactId>
+      <version>${datanucleus-api-jdo.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-rdbms</artifactId>
+      <version>${datanucleus-rdbms.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-core</artifactId>
+      <version>${datanucleus-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>javax.jdo</artifactId>
+      <version>${datanucleus-jdo.version}</version>
+    </dependency>
+
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${vers.jackson-hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${vers.jackson-hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${vers.jackson-hadoop}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>

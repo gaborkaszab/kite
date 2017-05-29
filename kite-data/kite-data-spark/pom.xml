@@ -30,6 +30,11 @@
     The Kite Data Spark module provides Spark support for working with Kite datasets.
   </description>
 
+  <properties>
+    <!-- The Spark tests are failing with Jackson 2.7.8 so we needed to downgrade it to 2.6.5. -->
+    <spark.vers.jackson>2.6.5</spark.vers.jackson>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -251,6 +256,22 @@
           <groupId>org.mortbay.jetty</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${spark.vers.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${spark.vers.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${spark.vers.jackson}</version>
     </dependency>
 
   </dependencies>

@@ -29,6 +29,8 @@ import org.kitesdk.data.Datasets;
 import org.kitesdk.data.spi.DatasetRepositories;
 import org.kitesdk.data.spi.DatasetRepository;
 
+import static org.kitesdk.data.HiveTestUtils.setHiveMetastoreConfParameters;
+
 public class TestHiveDatasetURIsCompatibility {
 
   private static final DatasetDescriptor DESCRIPTOR = new DatasetDescriptor
@@ -36,9 +38,16 @@ public class TestHiveDatasetURIsCompatibility {
       .schemaLiteral("\"string\"")
       .build();
 
-  private static final MetaStoreUtil metastore = MetaStoreUtil.get(new Configuration());
+  private MetaStoreUtil metastore;
 
   @Before
+  public void cleanHiveAndSetHiveMetastoreConfParameters() {
+    Configuration conf = new Configuration();
+    setHiveMetastoreConfParameters(conf);
+    this.metastore = MetaStoreUtil.get(conf);
+    cleanHive();
+  }
+
   @After
   public void cleanHive() {
     // ensures all tables are removed

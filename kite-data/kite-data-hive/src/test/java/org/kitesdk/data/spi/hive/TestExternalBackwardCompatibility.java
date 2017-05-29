@@ -33,6 +33,8 @@ import org.kitesdk.data.Formats;
 import org.kitesdk.data.TestHelpers;
 import org.kitesdk.data.ValidationException;
 
+import static org.kitesdk.data.HiveTestUtils.setHiveMetastoreConfParameters;
+
 /**
  * Tests external URI backward-compatibility with existing datasets.
  *
@@ -62,6 +64,7 @@ public class TestExternalBackwardCompatibility {
   public void addTableToDefault() {
     // this test uses the local FS because
     this.conf = new Configuration();
+    setHiveMetastoreConfParameters(this.conf);
     this.metastore = MetaStoreUtil.get(conf);
     cleanHive();
     metastore.dropTable("default", "test");

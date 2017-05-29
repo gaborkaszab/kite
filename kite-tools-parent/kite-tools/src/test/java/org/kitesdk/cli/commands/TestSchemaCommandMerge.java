@@ -39,6 +39,7 @@ import org.kitesdk.data.TestHelpers;
 import org.kitesdk.data.ValidationException;
 import org.slf4j.Logger;
 
+import static org.kitesdk.data.HiveTestUtils.setHiveMetastoreConfParameters;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;
@@ -76,7 +77,9 @@ public class TestSchemaCommandMerge {
     this.console = mock(Logger.class);
     this.command = new SchemaCommand(console);
     command.merge = true;
-    command.setConf(new Configuration());
+    Configuration conf = new Configuration();
+    setHiveMetastoreConfParameters(conf);
+    command.setConf(conf);
   }
 
   @After

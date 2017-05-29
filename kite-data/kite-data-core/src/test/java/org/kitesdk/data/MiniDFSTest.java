@@ -23,6 +23,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.kitesdk.compat.DynMethods;
 
+import static org.kitesdk.data.HiveTestUtils.setHiveMetastoreConfParameters;
+
 /**
  * Provides setup/teardown of a MiniDFSCluster for tests that need one.
  */
@@ -60,6 +62,7 @@ public class MiniDFSTest {
       //cluster = new MiniDFSCluster.Builder(new Configuration()).build();
       dfs = getFS.invoke(cluster);
       conf = new Configuration(dfs.getConf());
+      setHiveMetastoreConfParameters(conf);
       lfs = FileSystem.getLocal(conf);
     }
   }

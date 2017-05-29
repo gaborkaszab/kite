@@ -33,6 +33,9 @@ public class TestCrunchDatasetsHive extends TestCrunchDatasets {
     // since the external directory is created before the table is
     fileSystem.getConf().setBoolean(HiveConf.ConfVars.HIVESTATSAUTOGATHER.varname,
         false);
+    fileSystem.getConf().setBoolean(HiveConf.ConfVars.METASTORE_AUTO_CREATE_ALL.varname,
+        true);
+    fileSystem.getConf().setBoolean(HiveConf.ConfVars.METASTORE_SCHEMA_VERIFICATION.varname, false);
     return new HiveManagedDatasetRepository.Builder()
         .configuration(fileSystem.getConf())
         .rootDirectory(testDirectory).build();
