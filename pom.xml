@@ -175,7 +175,7 @@
     <vers.jackson>2.7.8</vers.jackson>
     <vers.jackson-hadoop>2.7.8</vers.jackson-hadoop>
     <vers.opencsv>2.3</vers.opencsv>
-    <vers.jodatime>2.3</vers.jodatime>
+    <vers.jodatime>${cdh.joda-time.version}</vers.jodatime>
     <vers.jcommander>1.35</vers.jcommander>
     <vers.spark>${cdh.spark.version}</vers.spark>
     <vers.hadoop-aws>${cdh.hadoop.version}</vers.hadoop-aws>
