@@ -217,9 +217,9 @@ public final class LoadSolrBuilder implements CommandBuilder {
         } else {
           Collection<Object> values = entry.getValue();
           if (values.size() == 1 && values.iterator().next() instanceof Map) {
-            doc.setField(key, values.iterator().next(), getBoost(key)); // it is an atomic update
+            doc.setField(key, values.iterator().next()); // it is an atomic update
           } else {
-            doc.setField(key, values, getBoost(key));
+            doc.setField(key, values);
           }
         }
       }      
