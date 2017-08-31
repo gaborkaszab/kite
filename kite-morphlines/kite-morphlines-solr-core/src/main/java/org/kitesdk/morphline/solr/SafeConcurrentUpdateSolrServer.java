@@ -36,7 +36,7 @@ final class SafeConcurrentUpdateSolrServer extends ConcurrentUpdateSolrClient {
   }
 
   public SafeConcurrentUpdateSolrServer(String solrServerUrl, HttpClient client, int queueSize, int threadCount) {
-    super(solrServerUrl, client, queueSize, threadCount);
+    super(solrServerUrl, client, queueSize, threadCount, null, false);
   }
 
   @Override
