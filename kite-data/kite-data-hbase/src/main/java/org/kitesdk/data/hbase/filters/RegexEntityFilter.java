@@ -15,14 +15,15 @@
  */
 package org.kitesdk.data.hbase.filters;
 
-import java.lang.reflect.Constructor;
+import org.apache.hadoop.hbase.CompareOperator;
+import org.apache.hadoop.hbase.filter.RegexStringComparator;
+import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.kitesdk.data.DatasetException;
 import org.kitesdk.data.FieldMapping;
 import org.kitesdk.data.FieldMapping.MappingType;
 import org.kitesdk.data.hbase.impl.EntitySchema;
 import org.kitesdk.data.hbase.impl.EntitySerDe;
 
-import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
 
 /**
@@ -49,29 +50,10 @@ public class RegexEntityFilter implements EntityFilter {
   private Filter constructFilter(String regex, boolean isEqual, FieldMapping fieldMapping) {
     byte[] family = fieldMapping.getFamily();
     byte[] qualifier = fieldMapping.getQualifier();
+    CompareOperator compareOperator = isEqual ? CompareOperator.EQUAL : CompareOperator.NOT_EQUAL;
+    RegexStringComparator comparator = new RegexStringComparator(regex);
 
-    try {
-      // To work we both HBase 0.94 and 0.96 we have to use reflection to construct a
-      // SingleColumnValueFilter (and a RegexStringComparator) since
-      // WritableByteArrayComparable (which RegexStringComparator extends) was renamed
-      // to ByteArrayComparable in HBase 0.95 (HBASE-6658)
-      Class<?> c = Class.forName("org.apache.hadoop.hbase.filter.SingleColumnValueFilter");
-      for (Constructor<?> cons : c.getConstructors()) {
-        if (cons.getParameterTypes().length == 4 &&
-            !cons.getParameterTypes()[3].isArray()) { // not byte[] as the fourth arg
-          Object regexStringComparator = Class.forName(
-              "org.apache.hadoop.hbase.filter.RegexStringComparator")
-              .getConstructor(String.class).newInstance(regex);
-          return (Filter) cons.newInstance(family, qualifier,
-              isEqual ? CompareFilter.CompareOp.EQUAL
-              : CompareFilter.CompareOp.NOT_EQUAL, regexStringComparator);
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new DatasetException("Cannot create RegexEntityFilter.", e);
-    }
-    throw new DatasetException("Cannot create RegexEntityFilter (no constructor found).");
+    return new SingleColumnValueFilter(family, qualifier, compareOperator, comparator);
   }
 
   public RegexEntityFilter(EntitySchema entitySchema,
