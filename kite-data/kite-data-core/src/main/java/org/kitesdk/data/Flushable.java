@@ -27,10 +27,14 @@ package org.kitesdk.data;
  * failures.
  *
  * @since 0.18.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(
     value="NM_SAME_SIMPLE_NAME_AS_INTERFACE",
     justification="Intended to be a stricter version of the parent interface")
+@Deprecated
 public interface Flushable extends java.io.Flushable {
   /**
    * Ensure that data has been flushed to OS buffers on all replica data nodes.

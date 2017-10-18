@@ -37,6 +37,11 @@ import org.kitesdk.data.DatasetOperationException;
 import org.kitesdk.data.spi.AbstractDatasetReader;
 import org.kitesdk.data.spi.ReaderWriterState;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
+@Deprecated
 public class InputFormatReader<E> extends AbstractDatasetReader<E> {
   private static final TaskAttemptID FAKE_ID =
       new TaskAttemptID("", 0, false, 0, 0);

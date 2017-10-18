@@ -34,7 +34,11 @@ import com.google.common.base.Joiner;
 /**
  * Manager for creating, and checking {@link Signalable#isReady() ready} signals.
  * Stored in a filesystem, typically HDFS.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class SignalManager {
 
   private final Path signalDirectory;

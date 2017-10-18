@@ -41,7 +41,12 @@ import org.kitesdk.data.spi.predicates.Predicates;
 import org.kitesdk.data.spi.predicates.Range;
 import org.kitesdk.data.spi.predicates.Ranges;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
 @Immutable
+@Deprecated
 public class TimeDomain {
   private static final List<Integer> order = Lists.newArrayList(
       Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH,

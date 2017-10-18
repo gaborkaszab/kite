@@ -22,7 +22,11 @@ package org.kitesdk.data.spi;
  * information.
  *
  * @param <T> the type of the object to replace
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface Replaceable<T> {
   /**
    * Check whether {@code part} can be replaced.

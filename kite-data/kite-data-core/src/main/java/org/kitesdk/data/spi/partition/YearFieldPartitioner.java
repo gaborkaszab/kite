@@ -26,11 +26,16 @@ import org.kitesdk.data.spi.predicates.Predicates;
 import org.kitesdk.data.spi.predicates.Range;
 import org.kitesdk.data.spi.predicates.Ranges;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(
     value="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
     justification="Implement if we intend to use in Serializable objects "
         + " (e.g., TreeMaps) and use java serialization.")
 @Immutable
+@Deprecated
 public class YearFieldPartitioner extends CalendarFieldPartitioner {
 
   public YearFieldPartitioner(String sourceName) {

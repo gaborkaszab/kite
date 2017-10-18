@@ -63,7 +63,11 @@ import org.kitesdk.data.spi.filesystem.FileSystemProperties;
  * format ignores the value.
  *
  * @param <E> The type of entities in the {@code Dataset}.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class DatasetKeyOutputFormat<E> extends OutputFormat<E, Void> {
 
   public static final String KITE_OUTPUT_URI = "kite.outputUri";

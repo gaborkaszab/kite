@@ -27,7 +27,11 @@ import org.kitesdk.data.hbase.impl.SchemaManager;
  * A Dao for Avro's GenericRecords. In this Dao implementation, both the
  * underlying key record type, and the entity type are GenericRecords. This Dao
  * allows us to persist and fetch these GenericRecords to and from HBase.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class GenericAvroDao extends BaseDao<GenericRecord> {
 
   private static final AvroKeyEntitySchemaParser parser = new AvroKeyEntitySchemaParser();

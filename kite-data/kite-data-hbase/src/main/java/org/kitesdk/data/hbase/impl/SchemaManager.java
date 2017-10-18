@@ -23,7 +23,11 @@ import java.util.Map;
  * Interface for managing schemas with a meta store. This interface provides
  * various methods for accessing the schema values in the meta store, as well as
  * methods for creating or migrating new schemas.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface SchemaManager {
 
   /**

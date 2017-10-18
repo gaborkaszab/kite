@@ -30,8 +30,12 @@ import org.kitesdk.data.spi.ColumnMappingParser;
  * maps to a columnar store.
  *
  * @since 0.14.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @Immutable
+@Deprecated
 public class ColumnMapping {
 
   private final Collection<FieldMapping> fieldMappings;

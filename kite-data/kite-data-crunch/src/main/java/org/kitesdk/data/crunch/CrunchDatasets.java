@@ -49,7 +49,11 @@ import org.kitesdk.data.spi.StorageKey;
  * A helper class for exposing {@link Dataset}s and {@link View}s as Crunch
  * {@link ReadableSource}s or {@link Target}s.
  * </p>
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class CrunchDatasets {
 
   /**

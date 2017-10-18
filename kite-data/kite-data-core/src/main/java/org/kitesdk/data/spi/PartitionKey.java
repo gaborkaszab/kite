@@ -43,8 +43,12 @@ import org.kitesdk.data.impl.Accessor;
  * @see org.kitesdk.data.PartitionStrategy
  * @see org.kitesdk.data.spi.FieldPartitioner
  * @see org.kitesdk.data.Dataset
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @NotThreadSafe
+@Deprecated
 public class PartitionKey {
 
   private final Object[] values;

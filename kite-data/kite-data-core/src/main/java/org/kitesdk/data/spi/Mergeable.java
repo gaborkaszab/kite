@@ -20,7 +20,11 @@ package org.kitesdk.data.spi;
  * (undefined) way. Once merged, the update can be discarded without losing information.
  *
  * @param <T> the type of the object to merge
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface Mergeable<T> {
   /**
    * Merge the <code>update</code> object into <code>this</code>.

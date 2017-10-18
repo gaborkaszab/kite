@@ -38,7 +38,11 @@ import org.apache.avro.specific.SpecificRecord;
  * Utilities for determining the appropriate data model at runtime.
  *
  * @since 0.15.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class DataModelUtil {
 
   // Replace this with ReflectData.AllowNull once AVRO-1589 is available

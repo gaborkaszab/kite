@@ -20,7 +20,11 @@ package org.kitesdk.data.spi;
  * Datasets writers that can perform time-based and size-based rolling should
  * implement this interface to allow callers to configure the current roll
  * settings and to provide a clock signal for time-based rolling.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface RollingWriter extends ClockReady {
   void setRollIntervalMillis(long rollIntervalMillis);
   void setTargetFileSize(long targetSizeBytes);

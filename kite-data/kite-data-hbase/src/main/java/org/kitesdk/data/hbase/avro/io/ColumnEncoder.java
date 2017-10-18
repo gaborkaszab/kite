@@ -25,7 +25,8 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.util.Utf8;
 import org.apache.hadoop.hbase.util.Bytes;
 
-/* An Avro Encoder implementation used for encoding Avro
+/**
+ * An Avro Encoder implementation used for encoding Avro
  * instances to HBase columns. This is basically an
  * Avro BinaryEncoder with custom encoding of int,
  * long, and String types.
@@ -37,7 +38,11 @@ import org.apache.hadoop.hbase.util.Bytes;
  * 
  * Strings are encoded as UTF-8 bytes. This is consistent
  * with HBase, and will allow appends in the future.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class ColumnEncoder extends Encoder {
 
   private final BinaryEncoder wrappedEncoder;

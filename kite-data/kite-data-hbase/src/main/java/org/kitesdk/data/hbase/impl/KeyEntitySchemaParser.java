@@ -27,7 +27,11 @@ import org.kitesdk.data.PartitionStrategy;
  * @param <ENTITY_SCHEMA>
  *          The type that the raw entity schema gets parsed to. Extends
  *          EntitySchema<RAW_SCHEMA>
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface KeyEntitySchemaParser<KEY_SCHEMA extends KeySchema, ENTITY_SCHEMA extends EntitySchema> {
 
   /**

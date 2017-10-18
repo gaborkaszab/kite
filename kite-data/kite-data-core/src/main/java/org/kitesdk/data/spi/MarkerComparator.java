@@ -26,12 +26,16 @@ import org.kitesdk.data.impl.Accessor;
  * {@link PartitionStrategy}.
  *
  * @since 0.9.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @Immutable
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(
     value="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
     justification="Implement if we intend to use in Serializable objects "
         + " (e.g., TreeMaps) and use java serialization.")
+@Deprecated
 public class MarkerComparator implements Comparator<Marker> {
   private final PartitionStrategy strategy;
 

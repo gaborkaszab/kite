@@ -20,6 +20,11 @@ import com.google.common.base.Objects;
 import javax.annotation.Nullable;
 import org.apache.avro.Schema;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
+@Deprecated
 public class Exists<T> extends RegisteredPredicate<T> {
   public static final Exists INSTANCE = new Exists();
 

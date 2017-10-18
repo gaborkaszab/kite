@@ -22,7 +22,11 @@ package org.kitesdk.data;
  * datasets (if shared storage is used, for example).
  * <p>
  * @since 0.9.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class IncompatibleSchemaException extends ValidationException {
 
   public IncompatibleSchemaException(String message) {

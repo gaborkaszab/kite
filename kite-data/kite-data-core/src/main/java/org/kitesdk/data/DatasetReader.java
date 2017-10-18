@@ -57,8 +57,12 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * </p>
  *
  * @param <E> The type of entity produced by this reader.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @NotThreadSafe
+@Deprecated
 public interface DatasetReader<E> extends Iterator<E>, Iterable<E>, Closeable {
 
   /**

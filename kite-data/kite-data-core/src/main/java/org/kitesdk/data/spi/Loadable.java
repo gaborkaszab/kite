@@ -26,7 +26,11 @@ package org.kitesdk.data.spi;
  *   META-INF/services/org.kitesdk.data.spi.Loadable
  *
  * @since 0.8.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface Loadable {
   /**
    * Performs any loading and registration tasks.

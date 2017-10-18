@@ -27,8 +27,12 @@ import org.kitesdk.data.DatasetDescriptor;
  * Implementations of {@link MetadataProvider} are typically not thread-safe; that is,
  * the behavior when accessing a single instance from multiple threads is undefined.
  * </p>
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @NotThreadSafe
+@Deprecated
 public interface MetadataProvider {
 
   /**

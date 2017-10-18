@@ -31,12 +31,16 @@ import org.kitesdk.data.spi.FieldPartitioner;
  * e.g. {@link YearFieldPartitioner}. Note that we don't use
  * {@link java.text.SimpleDateFormat} patterns since we want to keep the type information
  * (values are ints).
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={
         "NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE",
         "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"},
     justification="False positive due to generics.")
 @Immutable
+@Deprecated
 public class CalendarFieldPartitioner extends FieldPartitioner<Long, Integer> {
 
   protected static final TimeZone UTC = TimeZone.getTimeZone("UTC");

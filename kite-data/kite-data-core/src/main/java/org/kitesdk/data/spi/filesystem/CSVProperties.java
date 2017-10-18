@@ -23,7 +23,12 @@ import org.kitesdk.data.DatasetDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
 @Immutable
+@Deprecated
 public class CSVProperties {
   private static final Logger LOG = LoggerFactory
       .getLogger(CSVProperties.class);

@@ -20,7 +20,11 @@ import org.apache.hadoop.mapreduce.InputFormat;
 
 /**
  * This interface is for datasets or views that can provide a MapReduce InputFormat.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface InputFormatAccessor<E> {
   /**
    * @return an input format for this dataset or view

@@ -22,6 +22,11 @@ import org.kitesdk.compat.DynConstructors;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetException;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
+@Deprecated
 public class InputFormatUtil {
   public static final String INPUT_FORMAT_CLASS_PROP = "kite.inputformat.class";
   public static final String INPUT_FORMAT_RECORD_PROP = "kite.inputformat.record-type";

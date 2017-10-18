@@ -26,7 +26,11 @@ package org.kitesdk.data;
  * record data, but that reader is still valid and able to read other records.
  *
  * @since 0.18.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class DatasetRecordException extends DatasetException {
   public DatasetRecordException(String message) {
     super(message);

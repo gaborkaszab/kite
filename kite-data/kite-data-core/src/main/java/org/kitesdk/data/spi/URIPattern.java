@@ -35,7 +35,11 @@ import java.util.Map;
  * Defines a URI pattern that can be used to parse and match other URIs.
  *
  * @since 0.8.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class URIPattern {
 
   public static final String SCHEME = "uri:scheme";

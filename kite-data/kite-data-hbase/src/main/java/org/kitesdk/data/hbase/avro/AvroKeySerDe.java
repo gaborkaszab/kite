@@ -41,7 +41,11 @@ import org.apache.avro.io.Encoder;
 /**
  * Avro implementation of the KeySerDe interface. This will serialize Keys and
  * PartialKeys to a special ordered memcmp-able avro encoding.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class AvroKeySerDe implements KeySerDe {
 
   private final Schema schema;

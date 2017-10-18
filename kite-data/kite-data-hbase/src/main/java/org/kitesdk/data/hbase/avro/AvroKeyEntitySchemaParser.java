@@ -76,7 +76,11 @@ import org.kitesdk.data.hbase.impl.KeyEntitySchemaParser;
  * meta:field1 column. Each key/value pair of the field2 map type would have its
  * value mapped to the map_family:[key] column. It will also participate in
  * optimistic concurrency control.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class AvroKeyEntitySchemaParser implements
     KeyEntitySchemaParser<AvroKeySchema, AvroEntitySchema> {
 

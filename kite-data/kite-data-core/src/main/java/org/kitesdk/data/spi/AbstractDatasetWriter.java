@@ -24,7 +24,11 @@ import org.slf4j.LoggerFactory;
  * A common DatasetWriter base class to simplify implementations.
  *
  * @param <E> The type of entities accepted by this DatasetWriter.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public abstract class AbstractDatasetWriter<E>
     implements DatasetWriter<E>, InitializeAccessor {
   private static final Logger LOG = LoggerFactory.getLogger(DatasetWriter.class);

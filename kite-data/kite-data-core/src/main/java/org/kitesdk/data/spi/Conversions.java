@@ -26,7 +26,11 @@ import org.apache.avro.Schema.Field;
  * Static helper methods for converting between types.
  *
  * @since 0.9.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class Conversions {
 
   public static <T> T convert(Object obj, Class<T> returnType) {

@@ -63,7 +63,11 @@ import org.apache.hadoop.fs.FileStatus;
  * if it doesn't exist, and the serialized descriptor will be stored in the file
  * {@code descriptor.avro}.
  * </p>
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class FileSystemMetadataProvider extends AbstractMetadataProvider {
 
   private static final Logger LOG = LoggerFactory

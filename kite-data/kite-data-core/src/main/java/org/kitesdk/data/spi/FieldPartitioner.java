@@ -42,8 +42,12 @@ import org.slf4j.LoggerFactory;
  * @param <T> The type of the target field, which is the type of the return value of the
  *           partition function.
  * @see org.kitesdk.data.PartitionStrategy
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @Immutable
+@Deprecated
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(
     value="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
     justification="Implement if we intend to use in Serializable objects "

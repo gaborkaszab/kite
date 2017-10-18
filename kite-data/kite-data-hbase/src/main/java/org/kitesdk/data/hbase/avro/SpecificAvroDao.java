@@ -46,7 +46,11 @@ import com.google.common.collect.Lists;
  * 
  * @param <E>
  *          The entity type.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
 
   private static Logger LOG = LoggerFactory.getLogger(SpecificAvroDao.class);

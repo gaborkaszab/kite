@@ -25,8 +25,11 @@ import org.kitesdk.data.DatasetDescriptor;
  * without needing to implement deprecated methods. It also includes backwards-
  * compatible implementations of current API methods so that implementers don't
  * need to implement deprecated methods.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
-@SuppressWarnings("deprecation") // this class helps transition
+@Deprecated
 public abstract class AbstractDatasetRepository implements DatasetRepository {
   @SuppressWarnings("unchecked")
   @Override

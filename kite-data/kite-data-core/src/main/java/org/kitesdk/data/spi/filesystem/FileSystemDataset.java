@@ -59,7 +59,11 @@ import java.util.Set;
 import org.apache.avro.generic.IndexedRecord;
 import org.kitesdk.data.Formats;
 
-@SuppressWarnings("deprecation")
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
+@Deprecated
 public class FileSystemDataset<E> extends AbstractDataset<E> implements
     Mergeable<FileSystemDataset<E>>, InputFormatAccessor<E>, LastModifiedAccessor,
     PartitionedDataset<E>, SizeAccessor, Signalable<E>, Replaceable<View<E>> {

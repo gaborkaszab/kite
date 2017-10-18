@@ -19,7 +19,11 @@ package org.kitesdk.data.hbase.impl;
  * A version check action, which allows us to check that the
  * version of an entity hasn't changed. This is useful for
  * optimistic concurrency control (OCC).
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class VersionCheckAction {
 
   private final long version;

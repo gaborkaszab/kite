@@ -81,7 +81,11 @@ import org.slf4j.LoggerFactory;
  * @see org.kitesdk.data.PartitionStrategy
  * @see org.kitesdk.data.spi.DatasetRepository
  * @see org.kitesdk.data.spi.MetadataProvider
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class FileSystemDatasetRepository extends AbstractDatasetRepository
     implements TemporaryDatasetRepositoryAccessor {
 

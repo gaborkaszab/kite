@@ -43,6 +43,11 @@ import org.kitesdk.data.spi.AbstractDatasetRepository;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
+@Deprecated
 public class HBaseDatasetRepository extends AbstractDatasetRepository {
 
   private static final String DEFAULT_NAMESPACE = "default";

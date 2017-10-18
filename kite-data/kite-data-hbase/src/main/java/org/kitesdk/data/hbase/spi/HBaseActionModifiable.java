@@ -27,7 +27,11 @@ import java.util.List;
  * Allows SPI hooks into HBase Actions (GET/SCAN/PUT/DELETE).
  * Any hooks added is persistent on the Dataset Views, Readers and Writers.
  * ActionModifier needs to be removed manually
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface HBaseActionModifiable {
   /**
    * Register a GetModifier to be called before every Get is executed on HBase.

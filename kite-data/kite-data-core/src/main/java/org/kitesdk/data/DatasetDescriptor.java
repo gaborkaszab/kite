@@ -60,8 +60,11 @@ import org.kitesdk.data.spi.partition.ProvidedFieldPartitioner;
  * of this class to hold this information. You are strongly encouraged to use
  * the inner {@link Builder} to create new instances.
  * </p>
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @Immutable
+@Deprecated
 public class DatasetDescriptor {
 
   private final Schema schema;

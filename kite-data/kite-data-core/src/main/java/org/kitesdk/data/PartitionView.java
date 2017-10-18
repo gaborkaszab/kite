@@ -27,8 +27,12 @@ import javax.annotation.concurrent.Immutable;
  *      The type of entities stored in the {@code Dataset} underlying this
  *      {@code View}.
  * @since 1.1.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @Immutable
+@Deprecated
 public interface PartitionView<E> extends View<E> {
   /**
    * Returns the location of this partition as a {@link URI}.

@@ -20,8 +20,12 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * A {@link DatasetRepository} that can be discarded when no longer needed.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @Immutable
+@Deprecated
 public interface TemporaryDatasetRepository extends DatasetRepository {
   /**
    * Deletes this temporary repository, removing all data and metadata.

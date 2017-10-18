@@ -19,7 +19,11 @@ package org.kitesdk.data.hbase.impl;
  * Generic callback interface used by HBaseClientTemplate class. This interface
  * modifies a Put instance before the HBaseClientTemplate executes it on the
  * HBase table.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface PutActionModifier {
 
   /**

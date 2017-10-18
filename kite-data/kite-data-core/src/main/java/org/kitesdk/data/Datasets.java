@@ -67,7 +67,11 @@ import org.kitesdk.data.spi.Registration;
  * entities from a dataset or view.
  *
  * @since 0.8.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class Datasets {
   /**
    * Load a {@link Dataset} or {@link View} for the given {@link URI}.

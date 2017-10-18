@@ -20,7 +20,11 @@ import org.kitesdk.data.ColumnMapping;
 /**
  * An EntitySchema is the parsed schema that contains the properties of an HBase
  * Common entity schema.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class EntitySchema {
 
   private final ColumnMapping mapping;

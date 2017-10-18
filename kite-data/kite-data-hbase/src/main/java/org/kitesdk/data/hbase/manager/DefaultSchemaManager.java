@@ -47,7 +47,11 @@ import com.google.common.collect.Sets;
  * The Default SchemaManager implementation. It uses a ManagedSchemaDao
  * implementation, passed in the constructor, to read schema metadata, and
  * persist schema metadata for schema creations and migrations.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class DefaultSchemaManager implements SchemaManager {
 
   private static Logger LOG = LoggerFactory

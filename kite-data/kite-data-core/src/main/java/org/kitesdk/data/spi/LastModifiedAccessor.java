@@ -18,7 +18,11 @@ package org.kitesdk.data.spi;
 /**
  * This interface is for classes that can report the last modified time of the entity that
  * they represent.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface LastModifiedAccessor {
   /**
    * @return the time that the entity represented by this class was last modified

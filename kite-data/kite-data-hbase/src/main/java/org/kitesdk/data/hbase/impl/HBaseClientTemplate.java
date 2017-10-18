@@ -42,7 +42,11 @@ import com.google.common.collect.ImmutableList;
  * This class uses the Template Method pattern to allow users to implement
  * callbacks for things like entity mapping, and get and put modification
  * (modify Get and Put before sending them off to HBase).
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class HBaseClientTemplate {
 
   private final Connection connection;

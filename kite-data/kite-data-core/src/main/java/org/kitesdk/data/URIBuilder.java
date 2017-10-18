@@ -32,7 +32,11 @@ import org.kitesdk.data.spi.URIPattern;
  * Builds dataset and view URIs
  *
  * @since 0.17.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class URIBuilder {
   public static final String DATASET_NAME_OPTION = "dataset";
   public static final String NAMESPACE_OPTION = "namespace";

@@ -26,7 +26,11 @@ import com.google.common.base.Objects;
  * types your {@link Format} supports.
  * </p>
  * @since 0.17.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public enum CompressionType {
 
   Snappy("snappy"),

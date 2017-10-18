@@ -68,7 +68,11 @@ import com.google.common.collect.Sets;
 
 /**
  * Utility class for managing Managed Schemas in HBase Common.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class SchemaTool {
   // Wait for 600 seconds (10 minutes) for all the tables to be available
   private static final int MAX_SECOND_WAIT_FOR_TABLE_CREATION = 600;

@@ -20,7 +20,11 @@ import org.apache.hadoop.hbase.client.Delete;
 /**
  * Represents a Delete. This simple class encapsulates both a Delete, and a
  * CheckAction operation, which allows us to do checkAndDelete.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class DeleteAction {
 
   private final Delete delete;

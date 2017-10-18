@@ -25,7 +25,11 @@ import org.kitesdk.data.spi.PartitionKey;
  * 
  * @param <E>
  *          The entity type.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class BaseDao<E> implements Dao<E> {
 
   private final String tableName;

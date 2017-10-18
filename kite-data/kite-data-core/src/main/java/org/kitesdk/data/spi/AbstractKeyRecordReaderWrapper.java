@@ -29,7 +29,11 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
  * @param <K> The type of the key to convert.
  * @param <V> The type of the value to convert.
  * @since 0.12.0
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public abstract class AbstractKeyRecordReaderWrapper<E, K, V> extends RecordReader<E, Void> {
 
   protected RecordReader<K, V> delegate = null;

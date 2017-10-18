@@ -36,7 +36,11 @@ import java.util.*;
 /**
  * Manager for creating, updating, and using Avro schemas stored in a
  * filesystem, typically HDFS.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class SchemaManager {
 
   private final Path schemaDirectory;

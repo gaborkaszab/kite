@@ -50,8 +50,12 @@ import org.kitesdk.data.IncompatibleSchemaException;
  *
  * @see Dataset
  * @see DatasetDescriptor
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @Immutable
+@Deprecated
 public interface DatasetRepository {
 
   /**

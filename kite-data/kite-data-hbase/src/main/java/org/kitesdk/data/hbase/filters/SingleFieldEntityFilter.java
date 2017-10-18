@@ -27,7 +27,11 @@ import org.kitesdk.data.hbase.impl.EntitySerDe;
 /**
  * An EntityFilter that will perform an equality filter on a single entity
  * field.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class SingleFieldEntityFilter implements EntityFilter {
 
   private final org.apache.hadoop.hbase.filter.Filter filter;

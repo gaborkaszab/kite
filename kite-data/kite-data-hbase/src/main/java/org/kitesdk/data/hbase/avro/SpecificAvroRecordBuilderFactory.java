@@ -29,7 +29,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @param <T>
  *          The type of SpecificRecord this factory creates builders for.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class SpecificAvroRecordBuilderFactory<T extends SpecificRecord>
     implements AvroRecordBuilderFactory<T> {
 

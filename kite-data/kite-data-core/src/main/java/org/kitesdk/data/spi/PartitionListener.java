@@ -18,7 +18,11 @@ package org.kitesdk.data.spi;
 /**
  * Callback interface for metadata providers to listen for a new partition being added
  * so they can act on it (e.g. by registering the new partition in their metadata store).
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public interface PartitionListener {
   void partitionAdded(String namespace, String name, String partition);
 

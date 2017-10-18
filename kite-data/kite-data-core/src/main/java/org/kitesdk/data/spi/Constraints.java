@@ -56,8 +56,12 @@ import static com.google.common.base.Predicates.alwaysTrue;
  * A set of simultaneous constraints.
  *
  * This class accumulates combine manages a set of logical constraints.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
 @Immutable
+@Deprecated
 public class Constraints {
 
   private static final Logger LOG = LoggerFactory.getLogger(Constraints.class);

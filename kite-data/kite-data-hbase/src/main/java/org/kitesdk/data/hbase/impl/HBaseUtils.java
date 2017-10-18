@@ -31,7 +31,11 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 /**
  * Static utility functions for working with the HBase API.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class HBaseUtils {
 
   /**

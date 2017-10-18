@@ -27,7 +27,11 @@ import org.apache.avro.io.Decoder;
  * A class that will decode Avro types, whose sort order can be determined by a
  * memcmp. Decodes avro types encoded with the MemcmpEncoder class. See that
  * class for information on how each type of value is encoded.
+ *
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public class MemcmpDecoder extends Decoder {
   private InputStream in;
 

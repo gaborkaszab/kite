@@ -31,6 +31,11 @@ import org.kitesdk.data.Datasets;
 import org.kitesdk.data.spi.StorageKey;
 import org.kitesdk.data.spi.filesystem.PathConversion;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
+@Deprecated
 public class Log4jAppender extends org.apache.flume.clients.log4jappender.Log4jAppender {
 
   private static final String PARTITION_PREFIX = "kite.partition.";

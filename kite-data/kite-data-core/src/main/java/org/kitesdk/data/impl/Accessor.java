@@ -29,7 +29,10 @@ import org.kitesdk.data.spi.FieldPartitioner;
  * This technique is described in detail in "Practical API Design" by
  * Jaroslav Tulach.
  * </p>
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
  */
+@Deprecated
 public abstract class Accessor {
   private static volatile Accessor DEFAULT;
   public static Accessor getDefault() {

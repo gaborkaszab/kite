@@ -20,7 +20,12 @@ import org.apache.avro.Schema;
 import org.apache.avro.io.parsing.ResolvingGrammarGenerator;
 import org.apache.avro.io.parsing.Symbol;
 
+/**
+ * @deprecated Kite DataSet API is deprecated as of CDH6.0.0 and will be removed from CDH in an upcoming release.
+ * Cloudera recommends that you use the equivalent API in Spark instead of the Kite DataSet API.
+ */
 // TODO: replace with AVRO-1315 when generally available
+@Deprecated
 public class SchemaValidationUtil {
 
   public static boolean canRead(Schema writtenWith, Schema readUsing) {
