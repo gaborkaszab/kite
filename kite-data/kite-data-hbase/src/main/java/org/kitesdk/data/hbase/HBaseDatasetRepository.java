@@ -39,6 +39,7 @@ import org.kitesdk.data.hbase.avro.SpecificAvroDao;
 import org.kitesdk.data.hbase.impl.Dao;
 import org.kitesdk.data.hbase.impl.SchemaManager;
 import org.kitesdk.data.hbase.manager.DefaultSchemaManager;
+import org.kitesdk.data.hbase.misc.ClassLoaderUtils;
 import org.kitesdk.data.spi.AbstractDatasetRepository;
 
 import com.google.common.base.Preconditions;
@@ -166,7 +167,7 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository {
 
   private static boolean isSpecific(DatasetDescriptor descriptor) {
     try {
-      Class.forName(descriptor.getSchema().getFullName());
+      ClassLoaderUtils.forName(descriptor.getSchema().getFullName());
       return true;
     } catch (ClassNotFoundException e) {
       return false;

@@ -28,6 +28,7 @@ import org.kitesdk.data.FieldMapping.MappingType;
 import org.kitesdk.data.PartitionStrategy;
 import org.kitesdk.data.ValidationException;
 import org.kitesdk.data.hbase.impl.EntityComposer;
+import org.kitesdk.data.hbase.misc.ClassLoaderUtils;
 import org.kitesdk.data.spi.DataModelUtil;
 import org.kitesdk.data.spi.EntityAccessor;
 import org.kitesdk.data.spi.PartitionKey;
@@ -227,7 +228,7 @@ public class AvroEntityComposer<E extends IndexedRecord> implements
       Class<E> specificClass;
       String className = schema.getFullName();
       try {
-        specificClass = (Class<E>) Class.forName(className);
+        specificClass = (Class<E>) ClassLoaderUtils.forName(className);
       } catch (ClassNotFoundException e) {
         throw new DatasetException("Could not get Class instance for "
             + className);

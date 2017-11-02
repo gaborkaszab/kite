@@ -34,6 +34,7 @@ import org.kitesdk.data.hbase.impl.CompositeBaseDao;
 import org.kitesdk.data.hbase.impl.Dao;
 import org.kitesdk.data.hbase.impl.EntityMapper;
 import org.kitesdk.data.hbase.impl.SchemaManager;
+import org.kitesdk.data.hbase.misc.ClassLoaderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,7 +166,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
           .parseEntitySchema(subEntitySchemaString);
       Class<S> subEntityClass;
       try {
-        subEntityClass = (Class<S>) Class.forName(subEntitySchema
+        subEntityClass = (Class<S>) ClassLoaderUtils.forName(subEntitySchema
             .getAvroSchema().getFullName());
       } catch (ClassNotFoundException e) {
         throw new RuntimeException(e);
@@ -210,7 +211,7 @@ public class SpecificAvroDao<E extends SpecificRecord> extends BaseDao<E> {
           .parseEntitySchema(subEntitySchemaString);
       Class<S> subEntityClass;
       try {
-        subEntityClass = (Class<S>) Class.forName(subEntitySchema
+        subEntityClass = (Class<S>) ClassLoaderUtils.forName(subEntitySchema
             .getAvroSchema().getFullName());
       } catch (ClassNotFoundException e) {
         throw new RuntimeException(e);

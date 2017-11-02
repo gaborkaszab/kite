@@ -16,6 +16,7 @@
 package org.kitesdk.data.hbase.avro;
 
 import org.kitesdk.data.DatasetException;
+import org.kitesdk.data.hbase.misc.ClassLoaderUtils;
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.SchemaNotFoundException;
 import org.kitesdk.data.ValidationException;
@@ -168,7 +169,7 @@ public class VersionedAvroEntityMapper<ENTITY extends IndexedRecord> implements
             .getEntitySchema(tableName, entityName);
         String entityClassName = mostRecentEntitySchema.getAvroSchema()
             .getFullName();
-        entityClass = (Class<ENTITY>) Class.forName(entityClassName);
+        entityClass = (Class<ENTITY>) ClassLoaderUtils.forName(entityClassName);
 
         // Initialize the entitySchema from the SCHEMA$ field on the class. This
         // will be or schema we'll use to write with.
