@@ -145,6 +145,7 @@
     <vers.commons-lang>2.6</vers.commons-lang>
     <vers.crunch-base>0.11.0</vers.crunch-base> <!-- The version CDH is based on -->
     <vers.crunch>${cdh.crunch.version}</vers.crunch>
+    <vers.derby>${cdh.derby.version}</vers.derby>
     <vers.findbugs.jsr305>2.0.1</vers.findbugs.jsr305> <!-- don't update to 3.0.0 since that is JDK 1.7 or later -->
     <vers.flume>${cdh.flume-ng.version}</vers.flume>
     <vers.guava>11.0.2</vers.guava>

@@ -160,7 +160,7 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.10.2.0</version>
+      <version>${vers.derby}</version>
     </dependency>
 
     <!-- for Hive tests -->
