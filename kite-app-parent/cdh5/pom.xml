@@ -86,7 +86,7 @@
     <kite.parquet.version>${cdh.parquet.version}</kite.parquet.version>
 
     <!-- other properties to help apps -->
-    <hadoop.guava.version>11.0.2</hadoop.guava.version>
+    <hadoop.guava.version>${vers.guava}</hadoop.guava.version>
     <hadoop.log4j.version>1.2.17</hadoop.log4j.version>
     <hadoop.slf4j.version>${cdh.slf4j.version}</hadoop.slf4j.version>
   </properties>

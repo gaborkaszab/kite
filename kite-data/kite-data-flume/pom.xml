@@ -64,7 +64,7 @@
                      property required for hadoop-1 -->
                 <property>
                   <name>thrift.version</name>
-                  <value>0.9.0</value>
+                  <value>${vers.thrift}</value>
                 </property>
               </properties>
             </configuration>

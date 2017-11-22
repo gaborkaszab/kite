@@ -148,7 +148,7 @@
     <vers.derby>${cdh.derby.version}</vers.derby>
     <vers.findbugs.jsr305>2.0.1</vers.findbugs.jsr305> <!-- don't update to 3.0.0 since that is JDK 1.7 or later -->
     <vers.flume>${cdh.flume-ng.version}</vers.flume>
-    <vers.guava>11.0.2</vers.guava>
+    <vers.guava>${cdh.guava.version}</vers.guava>
     <vers.hadoop-base>2.6.0</vers.hadoop-base> <!-- The version CDH is based on -->
     <vers.hadoop>${cdh.hadoop.version}</vers.hadoop>
     <vers.hbase>${cdh.hbase.version}</vers.hbase>
@@ -172,6 +172,7 @@
     <vers.typesafe.config>1.0.2</vers.typesafe.config>
     <vers.solr>${cdh.solr.version}</vers.solr>
     <solr.expected.version>${cdh.solr.version}</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
+    <vers.thrift>${cdh.thrift.version}</vers.thrift>
     <vers.tika>1.13</vers.tika>
     <vers.jackson>2.7.8</vers.jackson>
     <vers.jackson-hadoop>2.7.8</vers.jackson-hadoop>
