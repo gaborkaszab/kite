@@ -172,7 +172,7 @@ public class DetectMimeTypesTest extends AbstractMorphlineTest {
 //        path + "/testKeynote.key", "application/zip", "application/vnd.apple.keynote",
         
         path + "/testRTFVarious.rtf", "application/rtf", "application/rtf",
-        path + "/complex.mbox", "text/plain", "application/mbox",        
+        path + "/complex.mbox", "application/mbox", "application/mbox",
         path + "/test-outlook.msg", "application/x-tika-msoffice", "application/vnd.ms-outlook",
         path + "/testEMLX.emlx", "message/x-emlx", "message/x-emlx",
         path + "/testRFC822",  "message/rfc822", "message/rfc822",
@@ -185,13 +185,13 @@ public class DetectMimeTypesTest extends AbstractMorphlineTest {
         path + "/testFLAC.oga", "application/ogg", "audio/ogg",
         path + "/testVORBIS.ogg",  "audio/vorbis", "audio/vorbis",
         path + "/testMP4.m4a", "audio/mp4", "audio/mp4",
-        path + "/testWAV.wav",  "audio/x-wav", "audio/x-wav",
+        path + "/testWAV.wav",  "audio/vnd.wave", "audio/vnd.wave",
         path + "/testWMA.wma",  "audio/x-ms-wma", "audio/x-ms-wma",
         
         path + "/testFLV.flv", "video/x-flv", "video/x-flv",
         path + "/testWMV.wmv",  "video/x-ms-wmv", "video/x-ms-wmv",
         
-        path + "/testBMP.bmp", "image/x-ms-bmp", "image/x-ms-bmp",
+        path + "/testBMP.bmp", "image/bmp", "image/bmp",
         path + "/testPNG.png", "image/png", "image/png",        
         path + "/testPSD.psd", "image/vnd.adobe.photoshop", "image/vnd.adobe.photoshop",        
         path + "/testSVG.svg", "image/svg+xml", "image/svg+xml",        
@@ -212,28 +212,28 @@ public class DetectMimeTypesTest extends AbstractMorphlineTest {
         path + "/testWAR.war",  "application/zip", "application/x-tika-java-web-archive",
         path + "/testWindows-x86-32.exe",  "application/x-msdownload; format=pe32", "application/x-msdownload; format=pe32",
         path + "/testWINMAIL.dat",  "application/vnd.ms-tnef", "application/vnd.ms-tnef",
-        path + "/testWMF.wmf",  "application/x-msmetafile", "application/x-msmetafile",
+        path + "/testWMF.wmf",  "image/wmf", "image/wmf",
     };
     
     for (int i = 0; i < files.length; i += 3) {
       byte[] body = Files.toByteArray(new File(files[i+0]));
       ListMultimap<String, Object> emptyMap = ArrayListMultimap.create();
       Record event = createEvent(new ByteArrayInputStream(body), emptyMap);
-      assertEquals(files[i+1], detect(event, false));
+      assertEquals(files[i], files[i+1], detect(event, false));
     }
     
     for (int i = 0; i < files.length; i += 3) {
       byte[] body = Files.toByteArray(new File(files[i+0]));
       ListMultimap headers = ImmutableListMultimap.of(Fields.ATTACHMENT_NAME, new File(files[i+0]).getName());
       Record event = createEvent(new ByteArrayInputStream(body), headers);
-      assertEquals(files[i+2], detect(event, true));
+      assertEquals(files[i], files[i+2], detect(event, true));
     }
     
     for (int i = 0; i < files.length; i += 3) {
       byte[] body = Files.toByteArray(new File(files[i+0]));
       ListMultimap headers = ImmutableListMultimap.of(Fields.ATTACHMENT_NAME, new File(files[i+0]).getPath());
       Record event = createEvent(new ByteArrayInputStream(body), headers);
-      assertEquals(files[i+2], detect(event, true));
+      assertEquals(files[i], files[i+2], detect(event, true));
     }
 
     // test excludeParameters flag:

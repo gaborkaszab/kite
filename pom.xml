@@ -173,7 +173,7 @@
     <vers.solr>${cdh.solr.version}</vers.solr>
     <solr.expected.version>${cdh.solr.version}</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
     <vers.thrift>${cdh.thrift.version}</vers.thrift>
-    <vers.tika>1.13</vers.tika>
+    <vers.tika>${cdh.tika.version}</vers.tika>
     <vers.jackson>2.7.8</vers.jackson>
     <vers.jackson-hadoop>2.7.8</vers.jackson-hadoop>
     <vers.opencsv>2.3</vers.opencsv>
