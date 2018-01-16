@@ -81,6 +81,30 @@ public class KiteURIHandler implements URIHandler {
   }
 
   @Override
+  public Context getContext(URI uri, Configuration configuration, String s, boolean b) throws URIHandlerException {
+    return null;
+  }
+
+  @Override
+  public void delete(URI uri, Context context) throws URIHandlerException {
+    throw new UnsupportedOperationException(
+            "Deletions are not supported for " + uri);
+
+  }
+
+  @Override
+  public void delete(URI uri, Configuration configuration, String s) throws URIHandlerException {
+    throw new UnsupportedOperationException(
+            "Deletions are not supported for " + uri);
+
+  }
+
+  @Override
+  public String getURIWithoutDoneFlag(String uri, String doneFlag) throws URIHandlerException {
+    return uri;
+  }
+
+  @Override
   public DependencyType getDependencyType(final URI uri)
       throws URIHandlerException {
     return DependencyType.PULL;
@@ -97,12 +121,6 @@ public class KiteURIHandler implements URIHandler {
   public boolean unregisterFromNotification(final URI uri, final String actionID) {
     throw new UnsupportedOperationException(
         "Notifications are not supported for " + uri);
-  }
-
-  @Override
-  public Context getContext(final URI uri, final Configuration conf,
-      final String user) throws URIHandlerException {
-    return null;
   }
 
   @SuppressWarnings("rawtypes")

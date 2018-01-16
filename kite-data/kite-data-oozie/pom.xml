@@ -30,10 +30,6 @@
     The Kite Data Oozie module provides Oozie support for working with Kite datasets.
   </description>
 
-  <properties>
-    <vers.oozie4>4.1.0</vers.oozie4>
-  </properties>
-
   <build>
     <plugins>
       <plugin>
@@ -159,11 +155,10 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- custom URI handlers require Oozie 4.x -->
     <dependency>
       <groupId>org.apache.oozie</groupId>
       <artifactId>oozie-core</artifactId>
-      <version>${vers.oozie4}</version>
+      <version>${vers.oozie}</version>
     </dependency>
 
     <!-- Misc -->
@@ -199,21 +194,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <profiles>
-    <profile>
-      <id>cdh5</id>
-      <activation>
-        <property>
-          <name>hadoop.profile</name>
-          <value>cdh5</value>
-        </property>
-      </activation>
-      <properties>
-        <vers.oozie4>${vers.oozie}</vers.oozie4>
-      </properties>
-    </profile>
-  </profiles>
 
   <dependencyManagement>
     <dependencies>
