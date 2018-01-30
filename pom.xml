@@ -141,8 +141,8 @@
     <vers.avro>${cdh.avro.version}</vers.avro>
     <vers.commons-codec>1.4</vers.commons-codec>
     <vers.commons-io>${cdh.commons-io.version}</vers.commons-io>
-    <vers.commons-logging>1.1.3</vers.commons-logging>
-    <vers.commons-lang>2.6</vers.commons-lang>
+    <vers.commons-logging>${cdh.commons-logging.version}</vers.commons-logging>
+    <vers.commons-lang>${cdh.commons-lang.version}</vers.commons-lang>
     <vers.crunch-base>0.11.0</vers.crunch-base> <!-- The version CDH is based on -->
     <vers.crunch>${cdh.crunch.version}</vers.crunch>
     <vers.derby>${cdh.derby.version}</vers.derby>
@@ -159,7 +159,7 @@
     <vers.jexl>2.1.1</vers.jexl>
     <vers.compress>1.11</vers.compress>
     <vers.junit>4.10</vers.junit>
-    <vers.log4j>1.2.17</vers.log4j>
+    <vers.log4j>${cdh.log4j.version}</vers.log4j>
     <vers.maven>2.0.6</vers.maven>
     <vers.mockito>1.9.5</vers.mockito>
     <vers.mojo-executor>1.5</vers.mojo-executor>
