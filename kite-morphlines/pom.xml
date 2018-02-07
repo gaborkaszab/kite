@@ -155,6 +155,11 @@
         <artifactId>kite-morphlines-protobuf</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>1.14</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
