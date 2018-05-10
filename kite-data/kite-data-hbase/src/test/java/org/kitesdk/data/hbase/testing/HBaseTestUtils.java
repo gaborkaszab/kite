@@ -65,6 +65,7 @@ public class HBaseTestUtils {
           // don't run the regionserver UI (bind errors)
           conf.set("hbase.master.info.port", "-1");
           conf.set("hbase.regionserver.info.port.auto", "true");
+          conf.set("hbase.localcluster.assign.random.ports", "true");
         }
       }
     }
