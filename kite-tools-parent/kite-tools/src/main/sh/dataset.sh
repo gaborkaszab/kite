@@ -26,7 +26,7 @@ function debug() {
 
 bin=`dirname $0`
 bin=`cd ${bin} && pwd`
-
+kiteToolsRuntime="$bin/../kite-tools-runtime.jar"
 # Find paths to our dependency systems. If they are unset, use CDH defaults.
 
 if [ -z "${HADOOP_COMMON_HOME}" ]; then
@@ -108,7 +108,7 @@ if [ -d "${ZOOCFGDIR}" ]; then
   KITE_CLASSPATH=$ZOOCFGDIR:$KITE_CLASSPATH
 fi
 
-HADOOP_CLASSPATH="$0:${KITE_CLASSPATH}:${HADOOP_CLASSPATH}"
+HADOOP_CLASSPATH="$kiteToolsRuntime:${KITE_CLASSPATH}:${HADOOP_CLASSPATH}"
 if [ ! -z "$KITE_USER_CLASSPATH" ]; then
   # User has elements to prepend to the classpath, forcibly overriding
   # Kite's own lib directories.
@@ -135,7 +135,7 @@ export HIVE_CONF_DIR
 export HIVE_HOME
 
 if [ -x "$HADOOP_COMMON_HOME/bin/hadoop" ]; then
-  exec ${HADOOP_COMMON_HOME}/bin/hadoop jar "$0" $flags org.kitesdk.cli.Main ${OPT_OOZIE_ACTION_XML} $config --dollar-zero "$0" "$@"
+  exec ${HADOOP_COMMON_HOME}/bin/hadoop jar "$kiteToolsRuntime" $flags org.kitesdk.cli.Main ${OPT_OOZIE_ACTION_XML} $config --dollar-zero "$0" "$@"
 else
   echo "ERROR: Cannot find Hadoop installation!"
   echo "You can fix this warning by setting HADOOP_HOME"

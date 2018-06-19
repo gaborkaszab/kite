@@ -116,7 +116,6 @@
           <arguments>
             <argument>src/main/sh/build-executable.sh</argument>
             <argument>src/main/sh/dataset.sh</argument>
-            <argument>target/${project.artifactId}-${project.version}-runtime.jar</argument>
             <argument>target/kite-dataset</argument>
           </arguments>
         </configuration>

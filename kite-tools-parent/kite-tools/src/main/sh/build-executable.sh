@@ -14,5 +14,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-cat $1 $2 > $3
-chmod +x $3
+cat $1 > $2
+chmod +x $2
