@@ -29,6 +29,7 @@ import org.apache.solr.common.cloud.ZkConfigManager;
 import org.apache.solr.common.cloud.ZkNodeProps;
 import org.apache.solr.common.cloud.ZkStateReader;
 import org.apache.solr.common.util.StrUtils;
+import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,17 +74,17 @@ final class ZooKeeperDownloader {
     String configName = null;
 
     // first check for alias
-    byte[] aliasData = zkClient.getData(ZkStateReader.ALIASES, null, null, true);
-    Aliases aliases = ClusterState.load(aliasData);
-    String alias = aliases.getCollectionAlias(collection);
-    if (alias != null) {
-      List<String> aliasList = StrUtils.splitSmart(alias, ",", true);
-      if (aliasList.size() > 1) {
+    Stat stat = new Stat();
+    final byte[] aliasData = zkClient.getData(ZkStateReader.ALIASES, null, stat, true);
+    Aliases aliases = Aliases.fromJSON(aliasData, stat.getVersion());
+    List<String> aliasCollections = aliases.getCollectionAliasListMap().get(collection);
+    if (aliasCollections != null) {
+      if (aliasCollections.size() > 1) {
         throw new IllegalArgumentException("collection cannot be an alias that maps to multiple collections");
       }
-      collection = aliasList.get(0);
+      collection = aliasCollections.get(0);
     }
-    
+
     String path = ZkStateReader.COLLECTIONS_ZKNODE + "/" + collection;
     if (LOG.isInfoEnabled()) {
       LOG.info("Load collection config from:" + path);
